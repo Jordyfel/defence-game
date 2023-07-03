@@ -1,0 +1,7 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://c8c8on3ojfekb"]
+
+[ext_resource type="FontFile" uid="uid://co1p033lx1mx3" path="res://theme/Exo_2/static/Exo2-Regular.ttf" id="1_ihqer"]
+
+[resource]
+default_font = ExtResource("1_ihqer")
+default_font_size = 18

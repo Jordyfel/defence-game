@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://c6gj02my76wo6"]
+
+[ext_resource type="Script" path="res://source/game.gd" id="1_j2ywq"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7hjkv"]
+
+[sub_resource type="Sky" id="Sky_ptisr"]
+sky_material = SubResource("ProceduralSkyMaterial_7hjkv")
+
+[sub_resource type="Environment" id="Environment_ceti6"]
+background_mode = 2
+sky = SubResource("Sky_ptisr")
+
+[node name="Game" type="Node3D"]
+script = ExtResource("1_j2ywq")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ceti6")
+
+[node name="Camera3D" type="Camera3D" parent="."]

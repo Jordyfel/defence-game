@@ -1,5 +1,97 @@
-[gd_scene format=3 uid="uid://bk5mx4h4uccm0"]
+[gd_scene load_steps=4 format=3 uid="uid://bk5mx4h4uccm0"]
 
-[node name="Main Menu" type="Control"]
+[ext_resource type="Theme" uid="uid://c8c8on3ojfekb" path="res://theme/main_theme.tres" id="1_8oekj"]
+[ext_resource type="Script" path="res://source/main_menu.gd" id="1_nvyjc"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_prb6n"]
+line_spacing = 1.0
+font_size = 70
+font_color = Color(0.380392, 1, 0.45098, 1)
+shadow_size = 30
+shadow_color = Color(0.196078, 0.431373, 0.141176, 1)
+shadow_offset = Vector2(2, 2)
+
+[node name="MainMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 0
+theme = ExtResource("1_8oekj")
+script = ExtResource("1_nvyjc")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 430.0
+offset_top = 250.0
+offset_right = 746.0
+offset_bottom = 382.0
+
+[node name="Name" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Name"
+alignment = 1
+
+[node name="CreateGameButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Create game"
+
+[node name="JoinButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Join game"
+
+[node name="IPAdress" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+placeholder_text = "IP Adress"
+alignment = 1
+
+[node name="PlayerNamesList" type="VBoxContainer" parent="."]
+visible = false
+layout_mode = 2
+offset_left = 510.0
+offset_top = 500.0
+offset_right = 653.0
+offset_bottom = 554.0
+
+[node name="Label" type="Label" parent="PlayerNamesList"]
+layout_mode = 2
+text = "Players in lobby:"
+horizontal_alignment = 1
+
+[node name="ExitLobbyButton" type="Button" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 50.0
+offset_top = 550.0
+offset_right = 156.0
+offset_bottom = 601.0
+text = "Exit Lobby"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 900.0
+offset_top = 550.0
+offset_right = 1100.0
+offset_bottom = 601.0
+
+[node name="QuitButton" type="Button" parent="HBoxContainer"]
+visible = false
+layout_mode = 2
+text = "Quit Game"
+
+[node name="StartButton" type="Button" parent="HBoxContainer"]
+visible = false
+layout_mode = 2
+text = "Start Game"
+
+[node name="GameTitleLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 417.0
+offset_top = 86.0
+offset_right = 756.0
+offset_bottom = 174.0
+text = "Game Title"
+label_settings = SubResource("LabelSettings_prb6n")
+
+[connection signal="pressed" from="VBoxContainer/CreateGameButton" to="." method="_on_create_game_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/JoinButton" to="." method="_on_join_button_pressed"]
+[connection signal="pressed" from="ExitLobbyButton" to="." method="_on_exit_lobby_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/StartButton" to="." method="_on_start_button_pressed"]

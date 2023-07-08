@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://db7ry8dwek5ww"]
+
+[ext_resource type="Script" path="res://source/unit.gd" id="1_andgh"]
+
+[node name="Unit" type="CharacterBody3D"]
+script = ExtResource("1_andgh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+path_desired_distance = 2.0
+
+[connection signal="navigation_finished" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_navigation_finished"]

@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://bvl5x7v8tekda"]
+
+[ext_resource type="PackedScene" uid="uid://db7ry8dwek5ww" path="res://source/unit.tscn" id="1_pyx1o"]
+[ext_resource type="PackedScene" uid="uid://2eklxbe462na" path="res://assets/creature.glb" id="2_4thp6"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_sgelo"]
+radius = 1.0
+
+[node name="Unit" instance=ExtResource("1_pyx1o")]
+unit_name = "Kitty"
+
+[node name="CollisionShape3D" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("SphereShape3D_sgelo")
+
+[node name="Model" parent="." index="1" instance=ExtResource("2_4thp6")]
+
+[node name="Skeleton3D" parent="Model/Armature" index="0"]
+bones/5/rotation = Quaternion(0.00806412, -0.0124769, 0.682071, 0.731135)
+bones/7/rotation = Quaternion(-0.682074, 0.731133, -0.00803431, -0.0125089)
+bones/9/rotation = Quaternion(0.0199472, -0.00173044, 0.662291, 0.748979)
+bones/11/rotation = Quaternion(-0.662272, 0.748978, -0.0206423, -0.000944332)
+
+[editable path="Model"]

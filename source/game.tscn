@@ -1,9 +1,9 @@
-[gd_scene load_steps=14 format=3 uid="uid://c6gj02my76wo6"]
+[gd_scene load_steps=12 format=3 uid="uid://c6gj02my76wo6"]
 
 [ext_resource type="Script" path="res://source/game.gd" id="1_j2ywq"]
 [ext_resource type="Texture2D" uid="uid://bii5o3w5cygfm" path="res://addons/kenney_prototype_textures/dark/texture_07.png" id="2_6cd51"]
 [ext_resource type="Script" path="res://source/camera.gd" id="2_ck5gc"]
-[ext_resource type="Texture2D" uid="uid://cx1hhhnmr2q2k" path="res://addons/kenney_prototype_textures/dark/texture_01.png" id="3_1nqe8"]
+[ext_resource type="PackedScene" uid="uid://bvl5x7v8tekda" path="res://source/units/kitty.tscn" id="5_w2a5f"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7hjkv"]
 
@@ -14,6 +14,13 @@ sky_material = SubResource("ProceduralSkyMaterial_7hjkv")
 background_mode = 2
 sky = SubResource("Sky_ptisr")
 
+[sub_resource type="NavigationMesh" id="NavigationMesh_jx1vm"]
+vertices = PackedVector3Array(-19, 0.5, 9.5, -19, 0.5, 19, -9.5, 0.5, 19, 9.5, 0.5, 19, 19, 0.5, 19, 19, 0.5, 9.5, 19, 0.5, -9.5, 19, 0.5, -19, 9.5, 0.5, -19, -9.5, 0.5, -19, -19, 0.5, -19, -19, 0.5, -9.5, -19, 0.5, 0, -19, 0.5, 9.5, -9.5, 0.5, 19, 0, 0.5, 19, 9.5, 0.5, 19, 19, 0.5, 9.5, 19, 0.5, 0, 19, 0.5, -9.5, 9.5, 0.5, -19, 0, 0.5, -19, 0, 0.5, -19, -9.5, 0.5, -19, -19, 0.5, -9.5, -19, 0.5, 0, 19, 0.5, 0, 0, 0.5, -19, -19, 0.5, 0, -9.5, 0.5, 19, 0, 0.5, 19, 19, 0.5, 9.5)
+polygons = [PackedInt32Array(2, 1, 0), PackedInt32Array(5, 4, 3), PackedInt32Array(8, 7, 6), PackedInt32Array(11, 10, 9), PackedInt32Array(14, 13, 12), PackedInt32Array(17, 16, 15), PackedInt32Array(19, 18, 20), PackedInt32Array(20, 18, 21), PackedInt32Array(23, 22, 24), PackedInt32Array(24, 22, 25), PackedInt32Array(31, 30, 26), PackedInt32Array(26, 30, 29), PackedInt32Array(26, 29, 28), PackedInt32Array(26, 28, 27)]
+geometry_source_geometry_mode = 2
+geometry_source_group_name = &"navmesh_group"
+agent_radius = 1.0
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xae1r"]
 albedo_texture = ExtResource("2_6cd51")
 
@@ -23,14 +30,6 @@ size = Vector2(40, 40)
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ilkvm"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_6iowq"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xwo22"]
-albedo_texture = ExtResource("3_1nqe8")
-
-[sub_resource type="BoxMesh" id="BoxMesh_safhn"]
-material = SubResource("StandardMaterial3D_xwo22")
-
 [node name="Game" type="Node3D"]
 script = ExtResource("1_j2ywq")
 
@@ -38,25 +37,39 @@ script = ExtResource("1_j2ywq")
 environment = SubResource("Environment_ceti6")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.350305, 0.936636, 0, -0.936636, 0.350305, 0, 5.84763, 3.63227)
+transform = Transform3D(1, 0, 0, 0, 0.350305, 0.936636, 0, -0.936636, 0.350305, 0, 10.2848, 3.63227)
 script = ExtResource("2_ck5gc")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.64643, 0.762973, 0, -0.762973, -0.64643, 0, -2.85647, 0)
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+visible = false
+navigation_mesh = SubResource("NavigationMesh_jx1vm")
 
 [node name="Floor" type="StaticBody3D" parent="."]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" groups=["navmesh_group"]]
 mesh = SubResource("PlaneMesh_qlsqp")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
 shape = SubResource("WorldBoundaryShape3D_ilkvm")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -0.64643, 0.762973, 0, -0.762973, -0.64643, 0, -2.85647, 0)
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://source/units/kitty.tscn")
+spawn_path = NodePath("..")
 
-[node name="Box" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+[node name="CanvasLayerHUD" type="CanvasLayer" parent="."]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Box"]
-shape = SubResource("BoxShape3D_6iowq")
+[node name="Top Bar" type="HBoxContainer" parent="CanvasLayerHUD"]
+offset_right = 1920.0
+offset_bottom = 26.0
+grow_horizontal = 2
+alignment = 1
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Box"]
-mesh = SubResource("BoxMesh_safhn")
+[node name="Label" type="Label" parent="CanvasLayerHUD/Top Bar"]
+layout_mode = 2
+text = "Top bar goes here."
+
+[node name="Unit" parent="." instance=ExtResource("5_w2a5f")]
+transform = Transform3D(0.167165, 0, -0.985929, 0, 1, 0, 0.985929, 0, 0.167165, 0, 0, -4.10918)

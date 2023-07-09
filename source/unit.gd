@@ -5,28 +5,29 @@ extends CharacterBody3D
 
 @export var unit_name: String
 @export var movement_speed:= 4.0
+@export var max_health:= 100.0
 
+var health: float:
+	set(new_health):
+		health = clampf(new_health, 0.0, max_health)
+		health_bar.region_rect.position.x = (1 - health/max_health) * 200
+
+@onready var health_bar:= $ScuffedHealthBar
 @onready var navigation_agent:= $NavigationAgent3D
 @onready var animation_player:= $Model/AnimationPlayer
 
 
 
 func _ready():
+	navigation_agent.velocity_computed.connect(_on_velocity_computed)
+	health = max_health
 	animation_player.play(&"idle")
-	$/root/Game/Floor.input_event.connect(_on_floor_clicked)
 
 
-func _on_floor_clicked(
-			_camera: Node, event: InputEvent, event_position: Vector3,
-			_normal: Vector3, _shape_idx: int):
-	
-	if event.is_action_pressed(&"unit_move"):
-		look_at(event_position + Vector3(0, position.y, 0), Vector3.UP, true)
-		set_movement_target(event_position)
-
-
-func set_movement_target(movement_target: Vector3):
-	navigation_agent.set_target_position(movement_target)
+@rpc("call_local", "reliable")
+func command_move(target_position: Vector3) -> void:
+	look_at(target_position + Vector3(0, position.y, 0), Vector3.UP, true)
+	navigation_agent.set_target_position(target_position)
 	animation_player.play(&"run", -1, 1.4)
 
 
@@ -34,14 +35,16 @@ func _physics_process(_delta):
 	if navigation_agent.is_navigation_finished():
 		return
 	
-	var current_agent_position: Vector3 = global_position
 	var next_path_position: Vector3 = navigation_agent.get_next_path_position()
-	
-	var new_velocity: Vector3 = next_path_position - current_agent_position
-	new_velocity = new_velocity.normalized()
-	new_velocity = new_velocity * movement_speed
-	
-	velocity = new_velocity
+	var new_velocity:= (next_path_position - global_position).normalized() * movement_speed
+	if navigation_agent.avoidance_enabled:
+		navigation_agent.set_velocity(new_velocity)
+	else:
+		_on_velocity_computed(new_velocity)
+
+
+func _on_velocity_computed(safe_velocity: Vector3):
+	velocity = safe_velocity
 	move_and_slide()
 
 

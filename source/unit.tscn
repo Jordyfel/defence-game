@@ -1,13 +1,45 @@
-[gd_scene load_steps=2 format=3 uid="uid://db7ry8dwek5ww"]
+[gd_scene load_steps=4 format=3 uid="uid://db7ry8dwek5ww"]
 
 [ext_resource type="Script" path="res://source/unit.gd" id="1_andgh"]
+[ext_resource type="Texture2D" uid="uid://d3aaxlho2is00" path="res://assets/healthbar.png" id="2_1outt"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_f14lf"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = false
+properties/0/sync = false
+properties/0/watch = false
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = false
+properties/1/sync = false
+properties/1/watch = false
+properties/2/path = NodePath(".:health")
+properties/2/spawn = true
+properties/2/sync = false
+properties/2/watch = true
 
 [node name="Unit" type="CharacterBody3D"]
 script = ExtResource("1_andgh")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 
+[node name="ScuffedHealthBar" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.02315, 0)
+pixel_size = 0.001
+billboard = 1
+transparent = false
+double_sided = false
+fixed_size = true
+texture_filter = 0
+texture = ExtResource("2_1outt")
+region_enabled = true
+region_rect = Rect2(0, 0, 200, 10)
+
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
 path_desired_distance = 2.0
+avoidance_enabled = true
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 0.008
+replication_config = SubResource("SceneReplicationConfig_f14lf")
 
 [connection signal="navigation_finished" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_navigation_finished"]

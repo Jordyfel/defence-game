@@ -51,19 +51,19 @@ func remove_multiplayer_peer() -> void:
 	multiplayer.multiplayer_peer = null
 
 
-@rpc("any_peer")
+@rpc("any_peer", "reliable")
 func register_player(new_player_info: Dictionary) -> void:
 	var new_player_id:= multiplayer.get_remote_sender_id()
 	players[new_player_id] = new_player_info
 	player_connected.emit(new_player_id, new_player_info)
 
 
-@rpc("call_local")
+@rpc("call_local", "reliable")
 func load_game() -> void:
 	get_tree().change_scene_to_file("res://source/game.tscn")
 
 
-@rpc("any_peer", "call_local")
+@rpc("any_peer", "call_local", "reliable")
 func player_loaded() -> void:
 	if multiplayer.is_server():
 		players_loaded += 1

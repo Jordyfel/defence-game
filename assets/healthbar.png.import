@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cbo62gi1ta0dv"
-path.s3tc="res://.godot/imported/texture_01.png-94ebd82494c839e91a05b9e1cc2750ca.s3tc.ctex"
+uid="uid://d3aaxlho2is00"
+path.s3tc="res://.godot/imported/healthbar.png-471c6be8dcfbc1f62d350b14abdbb8fb.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://addons/kenney_prototype_textures/green/texture_01.png"
-dest_files=["res://.godot/imported/texture_01.png-94ebd82494c839e91a05b9e1cc2750ca.s3tc.ctex"]
+source_file="res://assets/healthbar.png"
+dest_files=["res://.godot/imported/healthbar.png-471c6be8dcfbc1f62d350b14abdbb8fb.s3tc.ctex"]
 
 [params]
 

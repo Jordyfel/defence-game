@@ -21,4 +21,7 @@ bones/7/rotation = Quaternion(-0.682074, 0.731133, -0.00803431, -0.0125089)
 bones/9/rotation = Quaternion(0.0199472, -0.00173044, 0.662291, 0.748979)
 bones/11/rotation = Quaternion(-0.662272, 0.748978, -0.0206423, -0.000944332)
 
+[node name="ScuffedHealthBar" parent="." index="2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.43904, 0)
+
 [editable path="Model"]

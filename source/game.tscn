@@ -15,11 +15,10 @@ background_mode = 2
 sky = SubResource("Sky_ptisr")
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_jx1vm"]
-vertices = PackedVector3Array(-19, 0.5, 9.5, -19, 0.5, 19, -9.5, 0.5, 19, 9.5, 0.5, 19, 19, 0.5, 19, 19, 0.5, 9.5, 19, 0.5, -9.5, 19, 0.5, -19, 9.5, 0.5, -19, -9.5, 0.5, -19, -19, 0.5, -19, -19, 0.5, -9.5, -19, 0.5, 0, -19, 0.5, 9.5, -9.5, 0.5, 19, 0, 0.5, 19, 9.5, 0.5, 19, 19, 0.5, 9.5, 19, 0.5, 0, 19, 0.5, -9.5, 9.5, 0.5, -19, 0, 0.5, -19, 0, 0.5, -19, -9.5, 0.5, -19, -19, 0.5, -9.5, -19, 0.5, 0, 19, 0.5, 0, 0, 0.5, -19, -19, 0.5, 0, -9.5, 0.5, 19, 0, 0.5, 19, 19, 0.5, 9.5)
+vertices = PackedVector3Array(-19.5, 0.5, 9.75, -19.5, 0.5, 19.5, -9.75, 0.5, 19.5, 9.75, 0.5, 19.5, 19.5, 0.5, 19.5, 19.5, 0.5, 9.75, 19.5, 0.5, -9.75, 19.5, 0.5, -19.5, 9.75, 0.5, -19.5, -9.75, 0.5, -19.5, -19.5, 0.5, -19.5, -19.5, 0.5, -9.75, -19.5, 0.5, 0, -19.5, 0.5, 9.75, -9.75, 0.5, 19.5, 0, 0.5, 19.5, 9.75, 0.5, 19.5, 19.5, 0.5, 9.75, 19.5, 0.5, 0, 19.5, 0.5, -9.75, 9.75, 0.5, -19.5, 0, 0.5, -19.5, 0, 0.5, -19.5, -9.75, 0.5, -19.5, -19.5, 0.5, -9.75, -19.5, 0.5, 0, 19.5, 0.5, 0, 0, 0.5, -19.5, -19.5, 0.5, 0, -9.75, 0.5, 19.5, 0, 0.5, 19.5, 19.5, 0.5, 9.75)
 polygons = [PackedInt32Array(2, 1, 0), PackedInt32Array(5, 4, 3), PackedInt32Array(8, 7, 6), PackedInt32Array(11, 10, 9), PackedInt32Array(14, 13, 12), PackedInt32Array(17, 16, 15), PackedInt32Array(19, 18, 20), PackedInt32Array(20, 18, 21), PackedInt32Array(23, 22, 24), PackedInt32Array(24, 22, 25), PackedInt32Array(31, 30, 26), PackedInt32Array(26, 30, 29), PackedInt32Array(26, 29, 28), PackedInt32Array(26, 28, 27)]
 geometry_source_geometry_mode = 2
 geometry_source_group_name = &"navmesh_group"
-agent_radius = 1.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xae1r"]
 albedo_texture = ExtResource("2_6cd51")
@@ -44,7 +43,6 @@ script = ExtResource("2_ck5gc")
 transform = Transform3D(1, 0, 0, 0, -0.64643, 0.762973, 0, -0.762973, -0.64643, 0, -2.85647, 0)
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
-visible = false
 navigation_mesh = SubResource("NavigationMesh_jx1vm")
 
 [node name="Floor" type="StaticBody3D" parent="."]

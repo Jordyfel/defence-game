@@ -3,18 +3,18 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://2eklxbe462na"
-path="res://.godot/imported/creature.glb-c456769b8c013e885644c9f27e1aefa4.scn"
+uid="uid://rj7r3kdmajee"
+path="res://.godot/imported/kitty.glb-570fba8e6a70dfbbe33e4e86e51ece17.scn"
 
 [deps]
 
-source_file="res://assets/creature.glb"
-dest_files=["res://.godot/imported/creature.glb-c456769b8c013e885644c9f27e1aefa4.scn"]
+source_file="res://assets/kitty.glb"
+dest_files=["res://.godot/imported/kitty.glb-570fba8e6a70dfbbe33e4e86e51ece17.scn"]
 
 [params]
 
 nodes/root_type="Node3D"
-nodes/root_name="Model"
+nodes/root_name="Scene Root"
 nodes/apply_root_scale=true
 nodes/root_scale=1.0
 meshes/ensure_tangents=true

@@ -1,10 +1,10 @@
 [gd_scene load_steps=12 format=3 uid="uid://bvl5x7v8tekda"]
 
 [ext_resource type="PackedScene" uid="uid://db7ry8dwek5ww" path="res://source/unit.tscn" id="1_pyx1o"]
-[ext_resource type="PackedScene" uid="uid://2eklxbe462na" path="res://assets/creature.glb" id="2_4thp6"]
+[ext_resource type="PackedScene" uid="uid://rj7r3kdmajee" path="res://assets/kitty.glb" id="2_xewvb"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_sgelo"]
-radius = 1.0
+radius = 0.4
 
 [sub_resource type="Animation" id="Animation_5e3rk"]
 resource_name = "RESET"
@@ -36,7 +36,8 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id="Animation_gf7ci"]
 resource_name = "idle"
-length = 1.6667
+length = 1.625
+loop_mode = 1
 tracks/0/type = "animation"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -50,7 +51,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id="Animation_j78y4"]
 resource_name = "run"
-length = 1.625
+length = 1.2917
 loop_mode = 1
 tracks/0/type = "animation"
 tracks/0/imported = false
@@ -89,19 +90,20 @@ size = Vector3(0.1, 0.1, 0.1)
 unit_name = "Kitty"
 
 [node name="CollisionShape3D" parent="." index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
 shape = SubResource("SphereShape3D_sgelo")
 
-[node name="Model" parent="." index="1" instance=ExtResource("2_4thp6")]
+[node name="Model" parent="." index="1" instance=ExtResource("2_xewvb")]
 
 [node name="Skeleton3D" parent="Model/Armature" index="0"]
 bones/5/rotation = Quaternion(0.00806412, -0.0124769, 0.682071, 0.731135)
-bones/7/rotation = Quaternion(-0.682074, 0.731133, -0.00803431, -0.0125089)
-bones/9/rotation = Quaternion(0.0199472, -0.00173044, 0.662291, 0.748979)
-bones/11/rotation = Quaternion(-0.662272, 0.748978, -0.0206423, -0.000944332)
+bones/7/rotation = Quaternion(0.682068, -0.731138, 0.00803397, 0.0125091)
+bones/9/rotation = Quaternion(0.0199471, -0.00173057, 0.662293, 0.748978)
+bones/11/rotation = Quaternion(0.662269, -0.748981, 0.0206426, 0.000943979)
 
-[node name="ScuffedHealthBar" parent="." index="2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.43904, 0)
+[node name="NavigationAgent3D" parent="." index="3"]
+path_desired_distance = 1.0
+avoidance_enabled = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="5"]
 libraries = {
@@ -109,12 +111,13 @@ libraries = {
 }
 
 [node name="AttackSource" type="Marker3D" parent="." index="6"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.102, 1.694)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.33631, 0.50421)
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="AttackSource" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.000309944, -0.000419974)
 emitting = false
 amount = 20
+lifetime = 0.6
 one_shot = true
 explosiveness = 0.8
 process_material = SubResource("ParticleProcessMaterial_h1k72")

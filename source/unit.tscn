@@ -23,8 +23,8 @@ script = ExtResource("1_andgh")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 
 [node name="ScuffedHealthBar" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.02315, 0)
-pixel_size = 0.001
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+pixel_size = 0.0005
 billboard = 1
 transparent = false
 double_sided = false

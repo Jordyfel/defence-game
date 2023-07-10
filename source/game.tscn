@@ -37,7 +37,7 @@ script = ExtResource("1_j2ywq")
 environment = SubResource("Environment_ceti6")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.350305, 0.936636, 0, -0.936636, 0.350305, 0, 10.2848, 3.63227)
+transform = Transform3D(1, 0, 0, 0, 0.34202, 0.939693, 0, -0.939693, 0.34202, 0, 15.7522, 3)
 script = ExtResource("2_ck5gc")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]

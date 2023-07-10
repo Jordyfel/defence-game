@@ -14,7 +14,7 @@ var health: float:
 
 @onready var health_bar:= $ScuffedHealthBar
 @onready var navigation_agent:= $NavigationAgent3D
-@onready var animation_player:= $Model/AnimationPlayer
+@onready var animation_player:= $AnimationPlayer
 
 
 
@@ -28,7 +28,7 @@ func _ready():
 func command_move(target_position: Vector3) -> void:
 	look_at(target_position + Vector3(0, position.y, 0), Vector3.UP, true)
 	navigation_agent.set_target_position(target_position)
-	animation_player.play(&"run", -1, 1.4)
+	animation_player.play(&"run")
 
 
 func _physics_process(_delta):

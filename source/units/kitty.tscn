@@ -1,7 +1,18 @@
-[gd_scene load_steps=12 format=3 uid="uid://bvl5x7v8tekda"]
+[gd_scene load_steps=16 format=3 uid="uid://bvl5x7v8tekda"]
 
 [ext_resource type="PackedScene" uid="uid://db7ry8dwek5ww" path="res://source/unit.tscn" id="1_pyx1o"]
+[ext_resource type="PackedScene" uid="uid://cwlvdwlmcuhgj" path="res://source/abilities/test_ability.tscn" id="2_s8l0v"]
+[ext_resource type="Script" path="res://source/unit_ability.gd" id="2_vxbvx"]
 [ext_resource type="PackedScene" uid="uid://rj7r3kdmajee" path="res://assets/kitty.glb" id="2_xewvb"]
+[ext_resource type="Resource" uid="uid://dygbavk4krv6l" path="res://source/abilities/test_ability.tres" id="3_2ee22"]
+
+[sub_resource type="Resource" id="Resource_j1j3g"]
+script = ExtResource("2_vxbvx")
+cooldown = 6.0
+resource_cost = 0.0
+cast_range = 10
+effect = ExtResource("3_2ee22")
+ability_scene = ExtResource("2_s8l0v")
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_sgelo"]
 radius = 0.4
@@ -89,6 +100,8 @@ size = Vector3(0.1, 0.1, 0.1)
 
 [node name="Unit" instance=ExtResource("1_pyx1o")]
 unit_name = "Kitty"
+team = &"enemy"
+ability_q = SubResource("Resource_j1j3g")
 
 [node name="CollisionShape3D" parent="." index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)

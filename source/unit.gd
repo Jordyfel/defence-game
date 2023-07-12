@@ -4,8 +4,12 @@ extends CharacterBody3D
 
 
 @export var unit_name: String
+@export var team: StringName
 @export var movement_speed:= 4.0
 @export var max_health:= 100.0
+
+@export_group("Abilities")
+@export var ability_q: UnitAbility
 
 var health: float:
 	set(new_health):
@@ -20,6 +24,7 @@ var health: float:
 
 func _ready():
 	navigation_agent.velocity_computed.connect(_on_velocity_computed)
+	
 	health = max_health
 	animation_player.play(&"idle")
 
@@ -50,3 +55,8 @@ func _on_velocity_computed(safe_velocity: Vector3):
 
 func _on_navigation_agent_3d_navigation_finished() -> void:
 	animation_player.play(&"idle")
+
+
+func _on_ability_effect_time_to_activate(ability: UnitAbility, unit_in_area: Unit) -> void:
+	if ability.effect.is_valid_target(self, unit_in_area):
+		ability.effect.activate_effect(self, unit_in_area)

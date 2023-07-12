@@ -22,6 +22,7 @@ size = Vector3(0.5, 0.5, 0.5)
 
 [sub_resource type="Animation" id="Animation_dinxa"]
 resource_name = "effect"
+length = 2.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true

@@ -3,6 +3,8 @@ extends CharacterBody3D
 
 
 
+signal activate_keyframe_reached
+
 @export var unit_name: String
 @export var team: StringName
 @export var movement_speed:= 4.0
@@ -57,6 +59,19 @@ func _on_navigation_agent_3d_navigation_finished() -> void:
 	animation_player.play(&"idle")
 
 
-func _on_ability_effect_time_to_activate(ability: UnitAbility, unit_in_area: Unit) -> void:
+func activate_ability(ability: UnitAbility, target) -> void:
+	animation_player.play("ability_q")
+	await activate_keyframe_reached
+	var ability_scene: AbilityScene = ability.ability_scene.instantiate()
+	ability_scene.position = target # temp, only to demonstrate logic
+	ability_scene.effect_time_reached.connect(_on_ability_effect_time_to_activate.bind(ability))
+	$/root/Game.add_child(ability_scene, true)
+
+
+func activate_keyframe() -> void:
+	activate_keyframe_reached.emit()
+
+
+func _on_ability_effect_time_to_activate(unit_in_area: Unit, ability: UnitAbility) -> void:
 	if ability.effect.is_valid_target(self, unit_in_area):
 		ability.effect.activate_effect(self, unit_in_area)

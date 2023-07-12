@@ -1,10 +1,11 @@
-[gd_scene load_steps=15 format=3 uid="uid://c6gj02my76wo6"]
+[gd_scene load_steps=16 format=3 uid="uid://c6gj02my76wo6"]
 
 [ext_resource type="Script" path="res://source/game.gd" id="1_j2ywq"]
 [ext_resource type="Texture2D" uid="uid://bii5o3w5cygfm" path="res://addons/kenney_prototype_textures/dark/texture_07.png" id="2_6cd51"]
 [ext_resource type="Script" path="res://source/camera.gd" id="2_ck5gc"]
 [ext_resource type="NavigationMesh" uid="uid://cm3vlaj5hnuw1" path="res://source/binary_resources/navigation_mesh.res" id="3_320e2"]
 [ext_resource type="Texture2D" uid="uid://cwf02sx1twsb6" path="res://addons/kenney_prototype_textures/light/texture_07.png" id="5_oocj0"]
+[ext_resource type="PackedScene" uid="uid://bvl5x7v8tekda" path="res://source/units/kitty.tscn" id="6_5uu37"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7hjkv"]
 
@@ -97,3 +98,6 @@ mesh = SubResource("BoxMesh_fg01k")
 
 [node name="UnitSpawn" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.196)
+
+[node name="Unit" parent="." instance=ExtResource("6_5uu37")]
+team = &"player"

@@ -21,6 +21,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id="Animation_jmc7a"]
 resource_name = "attack"
+length = 2.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -103,7 +104,8 @@ bones/11/rotation = Quaternion(0.662269, -0.748981, 0.0206426, 0.000943979)
 
 [node name="NavigationAgent3D" parent="." index="3"]
 path_desired_distance = 1.0
-avoidance_enabled = false
+avoidance_enabled = true
+radius = 0.4
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="5"]
 libraries = {
@@ -120,6 +122,7 @@ amount = 20
 lifetime = 0.6
 one_shot = true
 explosiveness = 0.8
+visibility_aabb = AABB(-1, -1, -1, 2, 2, 2)
 process_material = SubResource("ParticleProcessMaterial_h1k72")
 draw_pass_1 = SubResource("BoxMesh_0g0ab")
 

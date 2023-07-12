@@ -9,7 +9,10 @@ func _ready() -> void:
 
 # Called only on the server.
 func start_game() -> void:
-	pass
+	for i in 6:
+		var new_unit = load("res://source/units/kitty.tscn").instantiate()
+		new_unit.position.x += i
+		$UnitSpawn.add_child(new_unit, true)
 
 
 func _on_floor_clicked(_camera: Node, event: InputEvent, event_position: Vector3,_normal: Vector3,
@@ -21,5 +24,8 @@ func _on_floor_clicked(_camera: Node, event: InputEvent, event_position: Vector3
 
 @rpc("any_peer", "call_local", "reliable")
 func move_unit(target_position: Vector3) -> void:
-	$Unit.command_move.rpc(target_position)
+	for unit in $UnitSpawn.get_children():
+		unit.command_move.rpc(target_position)
+	
+	#$Unit.command_move.rpc(target_position)
 	#$Unit.command_move(target_position)

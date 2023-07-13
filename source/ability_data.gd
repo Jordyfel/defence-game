@@ -13,8 +13,10 @@ enum TargetMode {POSITION, UNIT, AREA}
 
 
 func is_valid_target(_source_unit: Unit, _target_unit: Unit) -> bool:
+	assert(false, "You failed to override the function :(")
 	return true
 
 
 func activate_effect(_source_unit: Unit, _target_unit: Unit) -> void:
+	assert(false, "You failed to override the function :(")
 	pass

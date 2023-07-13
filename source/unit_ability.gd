@@ -10,3 +10,4 @@ extends Resource
 # cast time?
 @export var effect: AbilityData
 @export var ability_scene: PackedScene
+@export var animation_name: StringName

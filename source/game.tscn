@@ -1,10 +1,12 @@
-[gd_scene load_steps=16 format=3 uid="uid://c6gj02my76wo6"]
+[gd_scene load_steps=18 format=3 uid="uid://c6gj02my76wo6"]
 
 [ext_resource type="Script" path="res://source/game.gd" id="1_j2ywq"]
 [ext_resource type="Texture2D" uid="uid://bii5o3w5cygfm" path="res://addons/kenney_prototype_textures/dark/texture_07.png" id="2_6cd51"]
 [ext_resource type="Script" path="res://source/camera.gd" id="2_ck5gc"]
 [ext_resource type="NavigationMesh" uid="uid://cm3vlaj5hnuw1" path="res://source/binary_resources/navigation_mesh.res" id="3_320e2"]
+[ext_resource type="Script" path="res://source/bottom_bar.gd" id="5_f8u6y"]
 [ext_resource type="Texture2D" uid="uid://cwf02sx1twsb6" path="res://addons/kenney_prototype_textures/light/texture_07.png" id="5_oocj0"]
+[ext_resource type="PackedScene" uid="uid://worcrepyo25l" path="res://source/ability_button.tscn" id="5_p8eb8"]
 [ext_resource type="PackedScene" uid="uid://bvl5x7v8tekda" path="res://source/units/kitty.tscn" id="6_5uu37"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7hjkv"]
@@ -87,6 +89,100 @@ alignment = 1
 layout_mode = 2
 text = "Top bar goes here."
 
+[node name="BottomBar" type="HBoxContainer" parent="CanvasLayerHUD/HUD"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -204.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("5_f8u6y")
+
+[node name="Spacer" type="Control" parent="CanvasLayerHUD/HUD/BottomBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayerHUD/HUD/BottomBar"]
+layout_mode = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="AbilityGrid" type="GridContainer" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+columns = 4
+
+[node name="AbilityButtonQ" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid" instance=ExtResource("5_p8eb8")]
+layout_mode = 2
+
+[node name="AbilityButtonW" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid" instance=ExtResource("5_p8eb8")]
+layout_mode = 2
+
+[node name="HotkeyLabel" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonW/HBoxContainer" index="1"]
+text = "W"
+
+[node name="AbilityButtonE" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid" instance=ExtResource("5_p8eb8")]
+layout_mode = 2
+
+[node name="HotkeyLabel" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonE/HBoxContainer" index="1"]
+text = "E"
+
+[node name="AbilityButtonR" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid" instance=ExtResource("5_p8eb8")]
+layout_mode = 2
+
+[node name="HotkeyLabel" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonR/HBoxContainer" index="1"]
+text = "R"
+
+[node name="AbilityButtonA" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid" instance=ExtResource("5_p8eb8")]
+layout_mode = 2
+
+[node name="HotkeyLabel" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonA/HBoxContainer" index="1"]
+text = "A"
+
+[node name="AbilityButtonS" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid" instance=ExtResource("5_p8eb8")]
+layout_mode = 2
+
+[node name="HotkeyLabel" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonS/HBoxContainer" index="1"]
+text = "S"
+
+[node name="AbilityButtonD" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid" instance=ExtResource("5_p8eb8")]
+layout_mode = 2
+
+[node name="HotkeyLabel" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonD/HBoxContainer" index="1"]
+text = "D"
+
+[node name="AbilityButtonF" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid" instance=ExtResource("5_p8eb8")]
+layout_mode = 2
+
+[node name="HotkeyLabel" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonF/HBoxContainer" index="1"]
+text = "F"
+
+[node name="AbilityButtonZ" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid" instance=ExtResource("5_p8eb8")]
+layout_mode = 2
+
+[node name="HotkeyLabel" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonZ/HBoxContainer" index="1"]
+text = "Z"
+
+[node name="AbilityButtonX" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid" instance=ExtResource("5_p8eb8")]
+layout_mode = 2
+
+[node name="HotkeyLabel" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonX/HBoxContainer" index="1"]
+text = "X"
+
+[node name="AbilityButtonC" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid" instance=ExtResource("5_p8eb8")]
+layout_mode = 2
+
+[node name="HotkeyLabel" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonC/HBoxContainer" index="1"]
+text = "C"
+
+[node name="AbilityButtonV" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid" instance=ExtResource("5_p8eb8")]
+layout_mode = 2
+
+[node name="HotkeyLabel" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonV/HBoxContainer" index="1"]
+text = "V"
+
 [node name="Box" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 3.17662)
 
@@ -101,3 +197,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.196)
 
 [node name="Unit" parent="." instance=ExtResource("6_5uu37")]
 team = &"player"
+
+[editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonQ"]
+[editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonW"]
+[editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonE"]
+[editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonR"]
+[editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonA"]
+[editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonS"]
+[editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonD"]
+[editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonF"]
+[editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonZ"]
+[editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonX"]
+[editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonC"]
+[editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonV"]

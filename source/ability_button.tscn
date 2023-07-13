@@ -1,0 +1,44 @@
+[gd_scene load_steps=2 format=3 uid="uid://worcrepyo25l"]
+
+[ext_resource type="Texture2D" uid="uid://lat7ahrw014r" path="res://icon.svg" id="1_x7h67"]
+
+[node name="AbilityButton" type="CenterContainer"]
+custom_minimum_size = Vector2(64, 64)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureButton" type="TextureButton" parent="."]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+texture_normal = ExtResource("1_x7h67")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+
+[node name="Margin" type="Control" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="HotkeyLabel" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "Q"
+
+[node name="Spacer" type="Control" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CostLabel" type="Label" parent="HBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 0
+text = "0
+"
+
+[node name="Margin2" type="Control" parent="HBoxContainer"]
+layout_mode = 2

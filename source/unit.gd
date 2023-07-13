@@ -60,7 +60,7 @@ func _on_navigation_agent_3d_navigation_finished() -> void:
 
 
 func activate_ability(ability: UnitAbility, target) -> void:
-	animation_player.play("ability_q")
+	animation_player.play(ability.animation_name)
 	await activate_keyframe_reached
 	var ability_scene: AbilityScene = ability.ability_scene.instantiate()
 	ability_scene.position = target # temp, only to demonstrate logic

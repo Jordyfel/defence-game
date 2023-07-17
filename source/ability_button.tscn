@@ -4,11 +4,13 @@
 
 [node name="AbilityButton" type="CenterContainer"]
 custom_minimum_size = Vector2(64, 64)
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_right = 64.0
+offset_bottom = 64.0
+
+[node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+mouse_filter = 2
 
 [node name="TextureButton" type="TextureButton" parent="."]
 custom_minimum_size = Vector2(64, 64)
@@ -20,9 +22,11 @@ stretch_mode = 5
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Margin" type="Control" parent="HBoxContainer"]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="HotkeyLabel" type="Label" parent="HBoxContainer"]
 layout_mode = 2
@@ -32,6 +36,7 @@ text = "Q"
 [node name="Spacer" type="Control" parent="HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
 
 [node name="CostLabel" type="Label" parent="HBoxContainer"]
 visible = false
@@ -42,3 +47,4 @@ text = "0
 
 [node name="Margin2" type="Control" parent="HBoxContainer"]
 layout_mode = 2
+mouse_filter = 2

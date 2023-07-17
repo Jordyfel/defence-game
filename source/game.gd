@@ -7,12 +7,21 @@ func _ready() -> void:
 	
 	Lobby.player_loaded.rpc_id(1)
 
+
 # Called only on the server.
 func start_game() -> void:
 	for i in 1:
 		var new_unit = load("res://source/units/kitty.tscn").instantiate()
 		new_unit.position.x += i
 		$UnitSpawn.add_child(new_unit, true)
+		%BottomBar.connect_to_unit(new_unit)
+
+
+func _on_ask_player_for_target(source_unit: Unit, ability: UnitAbility) -> void:
+	var target
+	# respond to floor clicked, unit clicked, or ui cancel
+	if target:
+		source_unit.activate_ability(ability, target)
 
 
 func _on_floor_clicked(_camera: Node, event: InputEvent, event_position: Vector3,_normal: Vector3,

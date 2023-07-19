@@ -21,6 +21,8 @@ func connect_to_unit(unit: Unit) -> void:
 	if connected_unit:
 		pass #disconnect from prev connected unit
 	connected_unit = unit
+	for ability_key in unit.abilities:
+		pass # fix me asap pwease
 	#connect to new units
 
 

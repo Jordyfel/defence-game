@@ -1,10 +1,12 @@
-[gd_resource type="Resource" script_class="TestAbility" load_steps=2 format=3 uid="uid://dygbavk4krv6l"]
+[gd_resource type="Resource" script_class="TestAbility" load_steps=3 format=3 uid="uid://dygbavk4krv6l"]
 
+[ext_resource type="Texture2D" uid="uid://lat7ahrw014r" path="res://icon.svg" id="1_6j3c6"]
 [ext_resource type="Script" path="res://source/abilities/test_ability.gd" id="2_ykens"]
 
 [resource]
 script = ExtResource("2_ykens")
 damage = 20.0
 name = "Test Ability"
-target_mode = 2
+icon = ExtResource("1_6j3c6")
+target_mode = 0
 target_area_size = 5.0

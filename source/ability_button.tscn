@@ -1,6 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://worcrepyo25l"]
-
-[ext_resource type="Texture2D" uid="uid://lat7ahrw014r" path="res://icon.svg" id="1_x7h67"]
+[gd_scene format=3 uid="uid://worcrepyo25l"]
 
 [node name="AbilityButton" type="CenterContainer"]
 custom_minimum_size = Vector2(64, 64)
@@ -15,7 +13,6 @@ mouse_filter = 2
 [node name="TextureButton" type="TextureButton" parent="."]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-texture_normal = ExtResource("1_x7h67")
 ignore_texture_size = true
 stretch_mode = 5
 

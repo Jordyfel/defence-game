@@ -5,7 +5,7 @@
 [sub_resource type="SphereShape3D" id="SphereShape3D_jog3n"]
 radius = 4.0
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_2aml7"]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_m4lb4"]
 spread = 180.0
 gravity = Vector3(0, 0, 0)
 initial_velocity_min = 0.5
@@ -16,7 +16,7 @@ linear_accel_max = 2.5
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jn020"]
 albedo_color = Color(0.627451, 0.0509804, 0.0862745, 1)
 
-[sub_resource type="BoxMesh" id="BoxMesh_i411v"]
+[sub_resource type="BoxMesh" id="BoxMesh_ejykl"]
 material = SubResource("StandardMaterial3D_jn020")
 size = Vector3(0.5, 0.5, 0.5)
 
@@ -50,7 +50,7 @@ tracks/1/keys = {
 }]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_1jaof"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ojdf1"]
 _data = {
 "effect": SubResource("Animation_dinxa")
 }
@@ -58,20 +58,20 @@ _data = {
 [node name="Ability" instance=ExtResource("1_pjc58")]
 
 [node name="Area3D" type="Area3D" parent="." index="0"]
+collision_layer = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" index="0"]
 shape = SubResource("SphereShape3D_jog3n")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="." index="1"]
-emitting = false
 amount = 32
 lifetime = 1.6
 one_shot = true
 explosiveness = 0.8
-process_material = SubResource("ParticleProcessMaterial_2aml7")
-draw_pass_1 = SubResource("BoxMesh_i411v")
+process_material = SubResource("ParticleProcessMaterial_m4lb4")
+draw_pass_1 = SubResource("BoxMesh_ejykl")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="2"]
 libraries = {
-"": SubResource("AnimationLibrary_1jaof")
+"": SubResource("AnimationLibrary_ojdf1")
 }

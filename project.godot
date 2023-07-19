@@ -131,6 +131,11 @@ ability_v={
 ]
 }
 
+[layer_names]
+
+3d_physics/layer_1="floor"
+3d_physics/layer_2="units"
+
 [rendering]
 
 anti_aliasing/quality/msaa_3d=2

@@ -3,9 +3,10 @@ extends Resource
 
 
 
-enum TargetMode {POSITION, UNIT, AREA}
+enum TargetMode {POSITION, UNIT}
 
 @export var name: String
+@export var icon: Texture2D
 
 @export var target_mode: TargetMode
 @export var target_area_size: float

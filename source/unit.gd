@@ -85,8 +85,9 @@ func request_target(ability_key: String) -> void:
 	ask_player_for_target.emit(self, ability)
 
 
-func activate_ability(ability: UnitAbility, target) -> void:
-	assert(ability in abilities.values())
+func activate_ability(ability: UnitAbility, target: Variant) -> void:
+	assert(ability in abilities.values()) # Ability belongs to this unit.
+	assert(target is Vector3 or target is Unit) # Target is position or unit.
 	animation_player.play(ability.animation_name)
 	await activate_keyframe_reached
 	var ability_scene: AbilityScene = ability.ability_scene.instantiate()

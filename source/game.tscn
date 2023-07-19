@@ -104,6 +104,7 @@ script = ExtResource("5_f8u6y")
 [node name="Spacer" type="Control" parent="CanvasLayerHUD/HUD/BottomBar"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayerHUD/HUD/BottomBar"]
 layout_mode = 2
@@ -198,6 +199,8 @@ mesh = SubResource("BoxMesh_fg01k")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.196)
 
 [node name="Unit" parent="." instance=ExtResource("6_5uu37")]
+collision_layer = 1
+collision_mask = 1
 team = &"player"
 
 [editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonQ"]

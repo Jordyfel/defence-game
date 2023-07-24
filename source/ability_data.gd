@@ -4,12 +4,14 @@ extends Resource
 
 
 enum TargetMode {POSITION, UNIT}
+enum TargetShape {ATTACHED_ARC, DETACHED_CIRCLE}
 
 @export var name: String
 @export var icon: Texture2D
 
 @export var target_mode: TargetMode
-@export var target_area_size: float
+@export var target_shape: TargetShape
+@export var target_area_radius: float
 
 
 

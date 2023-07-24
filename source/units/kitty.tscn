@@ -7,8 +7,9 @@
 [ext_resource type="Resource" uid="uid://dygbavk4krv6l" path="res://source/abilities/test_ability.tres" id="3_2ee22"]
 
 [sub_resource type="Resource" id="Resource_j1j3g"]
+resource_local_to_scene = true
 script = ExtResource("2_vxbvx")
-cooldown = 6.0
+base_cooldown = 3.0
 resource_cost = 0.0
 cast_range = 10
 effect = ExtResource("3_2ee22")

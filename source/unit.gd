@@ -6,6 +6,8 @@ extends CharacterBody3D
 signal ask_player_for_target(unit: Unit, ability: UnitAbility)
 signal activate_keyframe_reached
 
+signal ability_cooldown_started(ability_key: String, cooldown_duration: float)
+
 @export var unit_name: String
 @export var team: StringName
 @export var movement_speed:= 4.0
@@ -13,6 +15,7 @@ signal activate_keyframe_reached
 
 # I wish I could just export a dictionary, but this makes for the
 # best editing experience in the inspector.
+# Abilities must be local to scene!
 @export_group("Abilities")
 @export var ability_q: UnitAbility
 @export var ability_w: UnitAbility
@@ -39,10 +42,13 @@ var health: float:
 @onready var navigation_agent:= $NavigationAgent3D
 @onready var animation_player:= $AnimationPlayer
 
+# For faster iteration.
+var _valid_abilities: Array[UnitAbility] = []
+
 
 
 func _ready() -> void:
-	_fill_ability_dict()
+	_fill_abilities()
 	navigation_agent.velocity_computed.connect(_on_velocity_computed)
 	
 	health = max_health
@@ -56,7 +62,17 @@ func command_move(target_position: Vector3) -> void:
 	animation_player.play(&"run")
 
 
-func _physics_process(_delta) -> void:
+func _process_cooldowns(delta: float) -> void:
+	for ability in _valid_abilities:
+		if ability.is_on_cooldown:
+			ability.cooldown_remaining -= delta
+			if ability.cooldown_remaining < 0:
+				ability.is_on_cooldown = false
+
+
+func _physics_process(delta: float) -> void:
+	_process_cooldowns(delta)
+	
 	if navigation_agent.is_navigation_finished():
 		return
 	
@@ -82,16 +98,29 @@ func request_target(ability_key: String) -> void:
 	if not ability:
 		return
 	
+	if ability.is_on_cooldown:
+		return
+	
 	ask_player_for_target.emit(self, ability)
 
 
 func activate_ability(ability: UnitAbility, target: Variant) -> void:
 	assert(ability in abilities.values()) # Ability belongs to this unit.
 	assert(target is Vector3 or target is Unit) # Target is position or unit.
+	assert(not ability.is_on_cooldown)
+	
+	ability_cooldown_started.emit(abilities.find_key(ability), ability.base_cooldown)
+	ability.cooldown_remaining = ability.base_cooldown
+	ability.is_on_cooldown = true
 	animation_player.play(ability.animation_name)
+	
 	await activate_keyframe_reached
 	var ability_scene: AbilityScene = ability.ability_scene.instantiate()
-	ability_scene.position = target # temp, only to demonstrate logic
+	if target is Vector3:
+		ability_scene.position = target
+	elif target is Unit:
+		ability_scene.position = target.position # does this even make sense?
+	
 	ability_scene.effect_time_reached.connect(_on_ability_effect_time_to_activate.bind(ability))
 	$/root/Game.add_child(ability_scene, true)
 
@@ -105,9 +134,12 @@ func _on_ability_effect_time_to_activate(unit_in_area: Unit, ability: UnitAbilit
 		ability.effect.activate_effect(self, unit_in_area)
 
 
-func _fill_ability_dict() -> void:
+func _fill_abilities() -> void:
 	var is_ability = func(property_data: Dictionary) -> bool:
 		return property_data["name"].begins_with("ability")
 	
 	for property_data in get_property_list().filter(is_ability):
 		abilities[property_data["name"].right(1)] = get(property_data["name"])
+	
+	for ability in abilities.values().filter(func(ability): return ability != null):
+		_valid_abilities.push_back(ability)

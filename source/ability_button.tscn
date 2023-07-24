@@ -1,9 +1,21 @@
-[gd_scene format=3 uid="uid://worcrepyo25l"]
+[gd_scene load_steps=4 format=3 uid="uid://worcrepyo25l"]
+
+[ext_resource type="Script" path="res://source/ability_button.gd" id="1_4oppa"]
+[ext_resource type="Theme" uid="uid://c8c8on3ojfekb" path="res://theme/main_theme.tres" id="1_k1d6c"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4fqew"]
+bg_color = Color(0.411765, 0.411765, 0.411765, 0.411765)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
 
 [node name="AbilityButton" type="CenterContainer"]
 custom_minimum_size = Vector2(64, 64)
 offset_right = 64.0
 offset_bottom = 64.0
+theme = ExtResource("1_k1d6c")
+script = ExtResource("1_4oppa")
 
 [node name="Panel" type="Panel" parent="."]
 custom_minimum_size = Vector2(64, 64)
@@ -26,6 +38,8 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="HotkeyLabel" type="Label" parent="HBoxContainer"]
+unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_vertical = 0
 text = "Q"
@@ -36,6 +50,7 @@ size_flags_horizontal = 3
 mouse_filter = 2
 
 [node name="CostLabel" type="Label" parent="HBoxContainer"]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_vertical = 0
@@ -45,3 +60,20 @@ text = "0
 [node name="Margin2" type="Control" parent="HBoxContainer"]
 layout_mode = 2
 mouse_filter = 2
+
+[node name="CooldownIndicator" type="PanelContainer" parent="."]
+visible = false
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4fqew")
+
+[node name="Label" type="Label" parent="CooldownIndicator"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Timer" type="Timer" parent="."]
+
+[connection signal="pressed" from="TextureButton" to="." method="_on_texture_button_pressed"]

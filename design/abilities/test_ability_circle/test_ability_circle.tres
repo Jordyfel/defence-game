@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="TestAbility" load_steps=3 format=3 uid="uid://dygbavk4krv6l"]
+
+[ext_resource type="Texture2D" uid="uid://lat7ahrw014r" path="res://assets/icon.svg" id="1_6j3c6"]
+[ext_resource type="Script" path="res://design/abilities/test_ability_circle/test_ability_circle.gd" id="2_ykens"]
+
+[resource]
+script = ExtResource("2_ykens")
+damage = 20.0
+name = "Test Ability"
+icon = ExtResource("1_6j3c6")
+target_mode = 0
+target_shape = 1
+target_area_radius = 2.5

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="TestAbilityArc" load_steps=3 format=3 uid="uid://cj028r63ey33m"]
+
+[ext_resource type="Script" path="res://design/abilities/test_ability_arc/test_ability_arc.gd" id="1_d1g6x"]
+[ext_resource type="Texture2D" uid="uid://lat7ahrw014r" path="res://assets/icon.svg" id="1_kh2xr"]
+
+[resource]
+script = ExtResource("1_d1g6x")
+damage = 20.0
+name = "Test Ability Arc"
+icon = ExtResource("1_kh2xr")
+target_mode = 0
+target_shape = 0
+target_area_radius = 5.0

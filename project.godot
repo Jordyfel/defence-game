@@ -11,13 +11,13 @@ config_version=5
 [application]
 
 config/name="Defence Game"
-run/main_scene="res://source/main_menu.tscn"
+run/main_scene="res://core/main_menu/main_menu.tscn"
 config/features=PackedStringArray("4.1", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="res://assets/icon.svg"
 
 [autoload]
 
-Lobby="*res://source/lobby.gd"
+Lobby="*res://core/lobby.gd"
 
 [display]
 

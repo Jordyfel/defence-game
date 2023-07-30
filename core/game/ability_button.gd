@@ -29,7 +29,7 @@ func display_ability(ability: UnitAbility) -> void:
 		if ability.resource_cost > 0:
 			%CostLabel.text = str(ability.resource_cost)
 			%CostLabel.show()
-		$TextureButton.texture_normal = ability.effect.icon
+		$TextureButton.texture_normal = ability.data.icon
 
 
 func start_cooldown(duration: float) -> void:

@@ -12,6 +12,7 @@ enum TargetShape {ATTACHED_ARC, DETACHED_CIRCLE}
 @export var target_mode: TargetMode
 @export var target_shape: TargetShape
 @export var target_area_radius: float
+@export_range(0, 360) var arc_width: float
 
 
 

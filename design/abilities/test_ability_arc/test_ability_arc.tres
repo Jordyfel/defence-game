@@ -10,4 +10,5 @@ name = "Test Ability Arc"
 icon = ExtResource("1_kh2xr")
 target_mode = 0
 target_shape = 0
-target_area_radius = 5.0
+target_area_radius = 2.5
+arc_width = 45.0

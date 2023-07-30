@@ -2,9 +2,6 @@
 
 [ext_resource type="PackedScene" uid="uid://kplvbtnc0ahr" path="res://core/ability/ability_scene.tscn" id="1_pjc58"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_jog3n"]
-radius = 4.0
-
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_m4lb4"]
 spread = 180.0
 gravity = Vector3(0, 0, 0)
@@ -55,15 +52,12 @@ _data = {
 "effect": SubResource("Animation_dinxa")
 }
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_uaqb8"]
+radius = 2.5
+
 [node name="Ability" instance=ExtResource("1_pjc58")]
 
-[node name="Area3D" type="Area3D" parent="." index="0"]
-collision_layer = 0
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" index="0"]
-shape = SubResource("SphereShape3D_jog3n")
-
-[node name="GPUParticles3D" type="GPUParticles3D" parent="." index="1"]
+[node name="GPUParticles3D" type="GPUParticles3D" parent="." index="0"]
 emitting = false
 amount = 32
 lifetime = 1.6
@@ -72,7 +66,10 @@ explosiveness = 0.8
 process_material = SubResource("ParticleProcessMaterial_m4lb4")
 draw_pass_1 = SubResource("BoxMesh_ejykl")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="2"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="1"]
 libraries = {
 "": SubResource("AnimationLibrary_ojdf1")
 }
+
+[node name="CollisionShape3D" parent="Area3D" index="0"]
+shape = SubResource("SphereShape3D_uaqb8")

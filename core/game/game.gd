@@ -34,7 +34,7 @@ func start_game() -> void:
 func _on_ask_player_for_target(source_unit: Unit, ability: UnitAbility) -> void:
 	var target
 	
-	match ability.effect.target_mode:
+	match ability.data.target_mode:
 		AbilityData.TargetMode.POSITION:
 			var signals = SignalCombiner.new([floor_clicked, unit_clicked, cancel])
 			var result = await signals.completed_any

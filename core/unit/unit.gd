@@ -116,22 +116,25 @@ func activate_ability(ability: UnitAbility, target: Variant) -> void:
 	
 	await activate_keyframe_reached
 	var ability_scene: AbilityScene = ability.ability_scene.instantiate()
+	ability_scene.effect_time_reached.connect(_affect_unit.bind(ability))
 	if target is Vector3:
-		ability_scene.position = target
+		if ability.data.target_shape == AbilityData.TargetShape.DETACHED_CIRCLE:
+			ability_scene.position = target
+			$/root/Game.add_child(ability_scene, true)
+		elif ability.data.target_shape == AbilityData.TargetShape.ATTACHED_ARC:
+			ability_scene.arc_width_deg = ability.data.arc_width
+			$AttackSource.add_child(ability_scene, true)
 	elif target is Unit:
 		ability_scene.position = target.position # does this even make sense?
-	
-	ability_scene.effect_time_reached.connect(_on_ability_effect_time_to_activate.bind(ability))
-	$/root/Game.add_child(ability_scene, true)
 
 
 func activate_keyframe() -> void:
 	activate_keyframe_reached.emit()
 
 
-func _on_ability_effect_time_to_activate(unit_in_area: Unit, ability: UnitAbility) -> void:
-	if ability.effect.is_valid_target(self, unit_in_area):
-		ability.effect.activate_effect(self, unit_in_area)
+func _affect_unit(unit: Unit, ability: UnitAbility) -> void:
+	if ability.data.is_valid_target(self, unit):
+		ability.data.activate_effect(self, unit)
 
 
 func _fill_abilities() -> void:

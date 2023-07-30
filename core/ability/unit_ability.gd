@@ -8,7 +8,7 @@ extends Resource
 @export var cast_range:= 10
 # animation?
 # cast time?
-@export var effect: AbilityData
+@export var data: AbilityData
 @export var ability_scene: PackedScene
 @export var animation_name: StringName
 

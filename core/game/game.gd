@@ -51,7 +51,8 @@ func _on_ask_player_for_target(source_unit: Unit, ability: UnitAbility) -> void:
 			var result = await signals.completed_any
 			match result["source"]:
 				unit_clicked:
-					target = result["data"]
+					if ability.data.is_valid_target(source_unit, result["data"]):
+						target = result["data"]
 				_:
 					pass
 	

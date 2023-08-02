@@ -116,25 +116,33 @@ func activate_ability(ability: UnitAbility, target: Variant) -> void:
 	
 	await activate_keyframe_reached
 	var ability_scene: AbilityScene = ability.ability_scene.instantiate()
-	ability_scene.effect_time_reached.connect(_affect_unit.bind(ability))
+	ability_scene.effect_time_reached.connect(_affect_unit.bind(ability, ability_scene))
+	ability_scene.data = ability.data
 	if target is Vector3:
 		if ability.data.target_shape == AbilityData.TargetShape.DETACHED_CIRCLE:
 			ability_scene.position = target
 			$/root/Game.add_child(ability_scene, true)
 		elif ability.data.target_shape == AbilityData.TargetShape.ATTACHED_ARC:
-			ability_scene.arc_width_deg = ability.data.arc_width
 			$AttackSource.add_child(ability_scene, true)
+		elif ability.data.target_shape == AbilityData.TargetShape.ATTACHED_LINE:
+			$/root/Game.add_child(ability_scene, true)
+			ability_scene.look_at_from_position(global_position, target, Vector3.UP, true)
 	elif target is Unit:
-		ability_scene.position = target.position # does this even make sense?
+		ability_scene.projectile_target = target
+		$/root/Game.add_child(ability_scene, true)
+		ability_scene.look_at_from_position(global_position, target.global_position, Vector3.UP, true)
 
 
 func activate_keyframe() -> void:
 	activate_keyframe_reached.emit()
 
 
-func _affect_unit(unit: Unit, ability: UnitAbility) -> void:
+func _affect_unit(unit: Unit, ability: UnitAbility, ability_scene: AbilityScene) -> void:
 	if ability.data.is_valid_target(self, unit):
 		ability.data.activate_effect(self, unit)
+		if ability.data.projectile_mode == AbilityData.ProjectileMode.LINEAR:
+			if not ability.data.piercing:
+				ability_scene.queue_free()
 
 
 func _fill_abilities() -> void:

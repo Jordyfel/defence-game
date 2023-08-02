@@ -44,8 +44,8 @@ direction = Vector3(0, 0, 1)
 spread = 30.0
 flatness = 0.8
 gravity = Vector3(0, 0, 0)
-initial_velocity_min = 1.0
-initial_velocity_max = 1.0
+initial_velocity_min = 2.2
+initial_velocity_max = 2.2
 color = Color(0.784314, 0.113725, 0.113725, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y3u1u"]

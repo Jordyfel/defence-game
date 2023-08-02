@@ -4,7 +4,8 @@ extends Resource
 
 
 enum TargetMode {POSITION, UNIT}
-enum TargetShape {ATTACHED_ARC, DETACHED_CIRCLE}
+enum TargetShape {NONE, ATTACHED_ARC, DETACHED_CIRCLE, ATTACHED_LINE}
+enum ProjectileMode {NONE, LINEAR, HOMING}
 
 @export var name: String
 @export var icon: Texture2D
@@ -13,6 +14,14 @@ enum TargetShape {ATTACHED_ARC, DETACHED_CIRCLE}
 @export var target_shape: TargetShape
 @export var target_area_radius: float
 @export_range(0, 360) var arc_width: float
+
+@export var projectile_mode: ProjectileMode
+@export var projectile_speed: float
+
+@export_group("Linear Projectile Properties")
+@export var max_travel_distance: float
+@export var piercing: bool
+
 
 
 

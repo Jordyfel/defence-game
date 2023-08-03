@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://bvl5x7v8tekda"]
+[gd_scene load_steps=25 format=3 uid="uid://bvl5x7v8tekda"]
 
 [ext_resource type="PackedScene" uid="uid://db7ry8dwek5ww" path="res://core/unit/unit.tscn" id="1_pyx1o"]
 [ext_resource type="PackedScene" uid="uid://rj7r3kdmajee" path="res://assets/kitty.glb" id="2_xewvb"]
@@ -9,6 +9,8 @@
 [ext_resource type="Resource" uid="uid://cj028r63ey33m" path="res://design/abilities/test_ability_arc/test_ability_arc.tres" id="6_e2paw"]
 [ext_resource type="PackedScene" uid="uid://xu8f5ygcshqe" path="res://design/abilities/test_ability_line/test_ability_line.tscn" id="7_ebj46"]
 [ext_resource type="Resource" uid="uid://cr3co4s81sy76" path="res://design/abilities/test_ability_line/test_ability_line.tres" id="8_axlml"]
+[ext_resource type="Texture2D" uid="uid://lat7ahrw014r" path="res://assets/icon.svg" id="9_6rnju"]
+[ext_resource type="Script" path="res://core/ability/ability_data.gd" id="10_1ck6s"]
 
 [sub_resource type="Resource" id="Resource_j1j3g"]
 resource_local_to_scene = true
@@ -20,6 +22,16 @@ data = ExtResource("3_pf3e8")
 ability_scene = ExtResource("2_yob13")
 animation_name = &"ability_q"
 
+[sub_resource type="Resource" id="Resource_h2hsc"]
+resource_local_to_scene = true
+script = ExtResource("3_gagjd")
+base_cooldown = 3.0
+resource_cost = 0.0
+cast_range = 10
+data = ExtResource("8_axlml")
+ability_scene = ExtResource("7_ebj46")
+animation_name = &"ability_e"
+
 [sub_resource type="Resource" id="Resource_i1yar"]
 resource_local_to_scene = true
 script = ExtResource("3_gagjd")
@@ -30,15 +42,27 @@ data = ExtResource("6_e2paw")
 ability_scene = ExtResource("5_vbg2e")
 animation_name = &"ability_w"
 
-[sub_resource type="Resource" id="Resource_h2hsc"]
+[sub_resource type="Resource" id="Resource_uy0gr"]
+script = ExtResource("10_1ck6s")
+name = "Stop"
+icon = ExtResource("9_6rnju")
+target_mode = 0
+target_shape = 0
+target_area_radius = 0.0
+arc_width = 0.0
+projectile_mode = 0
+projectile_speed = 0.0
+max_travel_distance = 0.0
+piercing = false
+
+[sub_resource type="Resource" id="Resource_sbb5e"]
 resource_local_to_scene = true
 script = ExtResource("3_gagjd")
-base_cooldown = 3.0
+base_cooldown = 0.0
 resource_cost = 0.0
-cast_range = 10
-data = ExtResource("8_axlml")
-ability_scene = ExtResource("7_ebj46")
-animation_name = &"ability_e"
+cast_range = 0
+data = SubResource("Resource_uy0gr")
+animation_name = &""
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_sgelo"]
 radius = 0.4
@@ -154,8 +178,9 @@ _data = {
 unit_name = "Kitty"
 team = &"enemy"
 ability_q = SubResource("Resource_j1j3g")
-ability_w = SubResource("Resource_i1yar")
 ability_e = SubResource("Resource_h2hsc")
+ability_a = SubResource("Resource_i1yar")
+ability_s = SubResource("Resource_sbb5e")
 
 [node name="CollisionShape3D" parent="." index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
@@ -174,6 +199,8 @@ path_desired_distance = 1.0
 avoidance_enabled = true
 height = 0.5
 radius = 0.4
+avoidance_layers = 2
+avoidance_mask = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="5"]
 libraries = {

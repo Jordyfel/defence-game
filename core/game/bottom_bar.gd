@@ -36,6 +36,10 @@ func _on_ability_cooldown_started(ability_key: String, cooldown_duration: float)
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("left_click_temp"):
+		if not $/root/Game.targeting: # hopefully temp...
+			connected_unit.request_target("a")
+	
 	if not event is InputEventKey:
 		return
 	

@@ -3,7 +3,7 @@ extends Resource
 
 
 
-enum TargetMode {POSITION, UNIT}
+enum TargetMode {NONE, POSITION, UNIT}
 enum TargetShape {NONE, ATTACHED_ARC, DETACHED_CIRCLE, ATTACHED_LINE}
 enum ProjectileMode {NONE, LINEAR, HOMING}
 

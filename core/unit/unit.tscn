@@ -1,7 +1,32 @@
-[gd_scene load_steps=4 format=3 uid="uid://db7ry8dwek5ww"]
+[gd_scene load_steps=9 format=3 uid="uid://db7ry8dwek5ww"]
 
 [ext_resource type="Script" path="res://core/unit/unit.gd" id="1_p77fq"]
+[ext_resource type="Texture2D" uid="uid://lat7ahrw014r" path="res://assets/icon.svg" id="2_4t52w"]
 [ext_resource type="Texture2D" uid="uid://d3aaxlho2is00" path="res://assets/healthbar.png" id="2_40ofj"]
+[ext_resource type="Script" path="res://core/ability/ability_data.gd" id="3_ghcj0"]
+[ext_resource type="Script" path="res://core/ability/unit_ability.gd" id="4_r0fng"]
+
+[sub_resource type="Resource" id="Resource_uy0gr"]
+script = ExtResource("3_ghcj0")
+name = "Stop"
+icon = ExtResource("2_4t52w")
+target_mode = 0
+target_shape = 0
+target_area_radius = 0.0
+arc_width = 0.0
+projectile_mode = 0
+projectile_speed = 0.0
+max_travel_distance = 0.0
+piercing = false
+
+[sub_resource type="Resource" id="Resource_6fqjh"]
+resource_local_to_scene = true
+script = ExtResource("4_r0fng")
+base_cooldown = 0.0
+resource_cost = 0.0
+cast_range = 0
+data = SubResource("Resource_uy0gr")
+animation_name = &""
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_f14lf"]
 properties/0/path = NodePath(".:position")
@@ -21,6 +46,7 @@ properties/2/watch = true
 collision_layer = 2
 collision_mask = 3
 script = ExtResource("1_p77fq")
+ability_s = SubResource("Resource_6fqjh")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 

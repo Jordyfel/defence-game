@@ -62,6 +62,12 @@ func command_move(target_position: Vector3) -> void:
 	animation_player.play(&"run")
 
 
+@rpc("call_local", "reliable")
+func command_stop() -> void:
+	navigation_agent.set_target_position(global_position)
+	animation_player.play(&"idle")
+
+
 func _process_cooldowns(delta: float) -> void:
 	for ability in _valid_abilities:
 		if ability.is_on_cooldown:
@@ -105,9 +111,13 @@ func request_target(ability_key: String) -> void:
 
 
 func activate_ability(ability: UnitAbility, target: Variant) -> void:
-	assert(ability in abilities.values()) # Ability belongs to this unit.
-	assert(target is Vector3 or target is Unit) # Target is position or unit.
+	assert(ability in abilities.values())
+	assert(target is Vector3 or target is Unit or target == null)
 	assert(not ability.is_on_cooldown)
+	
+	if ability == ability_s:
+		command_stop.rpc()
+		return
 	
 	ability_cooldown_started.emit(abilities.find_key(ability), ability.base_cooldown)
 	ability.cooldown_remaining = ability.base_cooldown

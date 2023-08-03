@@ -6,6 +6,8 @@ signal floor_clicked(click_position: Vector3)
 signal unit_clicked(unit: Unit)
 signal cancel
 
+var targeting:= false # Should be temp.
+
 
 
 func _ready() -> void:
@@ -29,12 +31,20 @@ func start_game() -> void:
 		$Unit.input_event.connect(_on_unit_clicked.bind($Unit))
 		$UnitSpawn.add_child(new_unit, true)
 		%BottomBar.connect_to_unit(new_unit)
+		new_unit.get_node(^"NavigationAgent3D").avoidance_layers = 1
+		new_unit.get_node(^"NavigationAgent3D").avoidance_mask = 1
 
 
 func _on_ask_player_for_target(source_unit: Unit, ability: UnitAbility) -> void:
+	targeting = true
 	var target
 	
 	match ability.data.target_mode:
+		AbilityData.TargetMode.NONE:
+			source_unit.activate_ability(ability, null)
+			targeting = false
+			return
+	
 		AbilityData.TargetMode.POSITION:
 			var signals = SignalCombiner.new([floor_clicked, unit_clicked, cancel])
 			var result = await signals.completed_any
@@ -42,7 +52,7 @@ func _on_ask_player_for_target(source_unit: Unit, ability: UnitAbility) -> void:
 				floor_clicked:
 					target = result["data"]
 				unit_clicked:
-					target = result["data"].position
+					target = result["data"].global_position
 				cancel:
 					pass
 		
@@ -56,6 +66,7 @@ func _on_ask_player_for_target(source_unit: Unit, ability: UnitAbility) -> void:
 				_:
 					pass
 	
+	targeting = false
 	if target:
 		source_unit.activate_ability(ability, target)
 

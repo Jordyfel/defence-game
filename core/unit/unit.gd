@@ -107,40 +107,53 @@ func request_target(ability_key: String) -> void:
 	if ability.is_on_cooldown:
 		return
 	
-	ask_player_for_target.emit(self, ability)
+	ask_player_for_target.emit(self, ability_key)
 
 
-func activate_ability(ability: UnitAbility, target: Variant) -> void:
-	assert(ability in abilities.values())
-	assert(target is Vector3 or target is Unit or target == null)
+@rpc("any_peer", "call_local", "reliable")
+func activate_ability(ability_index: String, target: Variant) -> void:
+	var ability = abilities[ability_index]
+	assert(target is Vector3 or target is NodePath or target == null)
 	assert(not ability.is_on_cooldown)
+	
+	if target is NodePath:
+		target = get_node(target)
 	
 	if ability == ability_s:
 		command_stop.rpc()
 		return
 	
-	ability_cooldown_started.emit(abilities.find_key(ability), ability.base_cooldown)
-	ability.cooldown_remaining = ability.base_cooldown
-	ability.is_on_cooldown = true
-	animation_player.play(ability.animation_name)
+	_start_casting_ability.rpc(ability_index)
 	
 	await activate_keyframe_reached
 	var ability_scene: AbilityScene = ability.ability_scene.instantiate()
 	ability_scene.effect_time_reached.connect(_affect_unit.bind(ability, ability_scene))
-	ability_scene.data = ability.data
+	
 	if target is Vector3:
 		if ability.data.target_shape == AbilityData.TargetShape.DETACHED_CIRCLE:
 			ability_scene.position = target
 			$/root/Game.add_child(ability_scene, true)
 		elif ability.data.target_shape == AbilityData.TargetShape.ATTACHED_ARC:
-			$AttackSource.add_child(ability_scene, true)
-		elif ability.data.target_shape == AbilityData.TargetShape.ATTACHED_LINE:
+			ability_scene.look_at_from_position($AttackSource.global_position, target, Vector3.UP, true)
 			$/root/Game.add_child(ability_scene, true)
+		elif ability.data.target_shape == AbilityData.TargetShape.ATTACHED_LINE:
 			ability_scene.look_at_from_position(global_position, target, Vector3.UP, true)
+			$/root/Game.add_child(ability_scene, true)
+	
 	elif target is Unit:
-		ability_scene.projectile_target = target
-		$/root/Game.add_child(ability_scene, true)
+		ability_scene.projectile_target_path = target.get_path()
 		ability_scene.look_at_from_position(global_position, target.global_position, Vector3.UP, true)
+		$/root/Game.add_child(ability_scene, true)
+		
+
+
+@rpc("call_local", "reliable")
+func _start_casting_ability(ability_index: String) -> void:
+	var ability = abilities[ability_index]
+	ability_cooldown_started.emit(abilities.find_key(ability), ability.base_cooldown)
+	ability.cooldown_remaining = ability.base_cooldown
+	ability.is_on_cooldown = true
+	animation_player.play(ability.animation_name)
 
 
 func activate_keyframe() -> void:

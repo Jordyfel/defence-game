@@ -1,0 +1,36 @@
+[gd_scene load_steps=7 format=3 uid="uid://kxxk6vsauyti"]
+
+[ext_resource type="PackedScene" uid="uid://kplvbtnc0ahr" path="res://core/ability/ability_scene.tscn" id="1_xln51"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_daeo4"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pnly2"]
+albedo_color = Color(0.764706, 0.192157, 0.258824, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2hn7k"]
+material = SubResource("StandardMaterial3D_pnly2")
+size = Vector3(0.2, 0.2, 0.2)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_qa6av"]
+direction = Vector3(0, 0, -1)
+spread = 180.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 1.0
+initial_velocity_max = 1.0
+tangential_accel_min = 6.0
+tangential_accel_max = 6.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_3olvw"]
+size = Vector3(0.05, 0.05, 0.05)
+
+[node name="Ability" instance=ExtResource("1_xln51")]
+
+[node name="CollisionShape3D" parent="Area3D" index="0"]
+shape = SubResource("SphereShape3D_daeo4")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." index="2"]
+mesh = SubResource("BoxMesh_2hn7k")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="." index="3"]
+process_material = SubResource("ParticleProcessMaterial_qa6av")
+draw_pass_1 = SubResource("BoxMesh_3olvw")

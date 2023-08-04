@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="TestAbilityHoming" load_steps=3 format=3 uid="uid://c1m72bnfinb61"]
+
+[ext_resource type="Texture2D" uid="uid://lat7ahrw014r" path="res://assets/icon.svg" id="1_7yrb6"]
+[ext_resource type="Script" path="res://design/abilities/test_ability_homing/test_ability_homing.gd" id="1_v8fiw"]
+
+[resource]
+script = ExtResource("1_v8fiw")
+damage = 20.0
+name = "Test Ability Homing"
+icon = ExtResource("1_7yrb6")
+target_mode = 2
+target_shape = 0
+target_area_radius = 0.0
+arc_width = 0.0
+projectile_mode = 2
+projectile_speed = 4.0
+max_travel_distance = 0.0
+piercing = false

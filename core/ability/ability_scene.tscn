@@ -1,6 +1,20 @@
-[gd_scene load_steps=2 format=3 uid="uid://kplvbtnc0ahr"]
+[gd_scene load_steps=3 format=3 uid="uid://kplvbtnc0ahr"]
 
 [ext_resource type="Script" path="res://core/ability/ability_scene.gd" id="1_th7xb"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_mn8nn"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/sync = false
+properties/0/watch = false
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/sync = false
+properties/1/watch = false
+properties/2/path = NodePath(".:projectile_target_path")
+properties/2/spawn = true
+properties/2/sync = false
+properties/2/watch = false
 
 [node name="Ability" type="Node3D"]
 script = ExtResource("1_th7xb")
@@ -11,3 +25,6 @@ collision_mask = 2
 input_ray_pickable = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_mn8nn")

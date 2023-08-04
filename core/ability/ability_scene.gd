@@ -6,6 +6,7 @@ extends Node3D
 signal effect_time_reached(unit_in_area: Unit)
 
 var data: AbilityData
+var projectile_target_path: NodePath
 var projectile_target: Unit
 var distance_traveled:= 0.0
 
@@ -14,11 +15,14 @@ var distance_traveled:= 0.0
 
 
 func _ready() -> void:
+	assert($Area3D/CollisionShape3D.shape != null)
+	data = load(scene_file_path.replace("tscn", "tres"))
 	$Area3D.body_entered.connect(_on_body_entered)
 	if data.projectile_mode == AbilityData.ProjectileMode.NONE:
 		$AnimationPlayer.animation_finished.connect(_on_animation_finished)
 		$AnimationPlayer.play(&"effect")
 	if data.projectile_mode == AbilityData.ProjectileMode.HOMING:
+		projectile_target = get_node(projectile_target_path)
 		assert(projectile_target != null)
 
 
@@ -26,7 +30,7 @@ func _physics_process(delta: float) -> void:
 	if data.projectile_mode == AbilityData.ProjectileMode.LINEAR:
 		global_position = global_position + global_transform.basis.z * data.projectile_speed * delta
 		distance_traveled += (global_transform.basis.z * data.projectile_speed * delta).length()
-		if distance_traveled > data.max_travel_distance:
+		if distance_traveled > data.max_travel_distance and multiplayer.is_server():
 			queue_free()
 	elif data.projectile_mode == AbilityData.ProjectileMode.HOMING:
 		look_at(projectile_target.global_position, Vector3.UP, true)
@@ -34,6 +38,9 @@ func _physics_process(delta: float) -> void:
 
 
 func activate_effect() -> void:
+	if not multiplayer.is_server():
+		return
+	
 	# Maybe remove the filter if everything in unit layer keeps being only units.
 	var targets = area.get_overlapping_bodies().filter(func(node): return node is Unit)
 	if not is_zero_approx(data.arc_width):
@@ -51,6 +58,9 @@ func _is_in_arc(unit: Unit) -> bool:
 
 
 func _on_body_entered(body: Node3D) -> void:
+	if not multiplayer.is_server():
+		return
+	
 	if data.projectile_mode == AbilityData.ProjectileMode.LINEAR:
 		if body is Unit:
 			effect_time_reached.emit(body)
@@ -61,5 +71,5 @@ func _on_body_entered(body: Node3D) -> void:
 
 
 func _on_animation_finished(_anim_name: StringName) -> void:
-	if data.projectile_mode == AbilityData.ProjectileMode.NONE:
+	if data.projectile_mode == AbilityData.ProjectileMode.NONE and multiplayer.is_server():
 		queue_free()

@@ -1,9 +1,10 @@
-[gd_scene load_steps=28 format=3 uid="uid://c6gj02my76wo6"]
+[gd_scene load_steps=29 format=3 uid="uid://c6gj02my76wo6"]
 
 [ext_resource type="Script" path="res://core/game/game.gd" id="1_bl3g5"]
 [ext_resource type="Script" path="res://core/game/camera.gd" id="2_fap4q"]
 [ext_resource type="NavigationMesh" uid="uid://cm3vlaj5hnuw1" path="res://bin/navigation_mesh.res" id="3_rcq0a"]
 [ext_resource type="Texture2D" uid="uid://bii5o3w5cygfm" path="res://addons/kenney_prototype_textures/dark/texture_07.png" id="4_dbgwi"]
+[ext_resource type="Script" path="res://core/game/spawner.gd" id="5_eclhg"]
 [ext_resource type="Script" path="res://core/game/bottom_bar.gd" id="5_yvbdk"]
 [ext_resource type="PackedScene" uid="uid://worcrepyo25l" path="res://core/game/ability_button.tscn" id="6_e7hu2"]
 [ext_resource type="Texture2D" uid="uid://cwf02sx1twsb6" path="res://addons/kenney_prototype_textures/light/texture_07.png" id="7_oq0gq"]
@@ -43,7 +44,7 @@ albedo_texture = ExtResource("7_oq0gq")
 material = SubResource("StandardMaterial3D_r7u7k")
 size = Vector3(2, 2, 2)
 
-[sub_resource type="Resource" id="Resource_iooyd"]
+[sub_resource type="Resource" id="Resource_h8g86"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 3.0
@@ -52,7 +53,7 @@ cast_range = 10
 ability_scene = ExtResource("9_0j6tn")
 animation_name = &"ability_q"
 
-[sub_resource type="Resource" id="Resource_o8ter"]
+[sub_resource type="Resource" id="Resource_41o5x"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 3.0
@@ -61,7 +62,7 @@ cast_range = 10
 ability_scene = ExtResource("12_i3ab4")
 animation_name = &"ability_w"
 
-[sub_resource type="Resource" id="Resource_ji41d"]
+[sub_resource type="Resource" id="Resource_ktc2y"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 3.0
@@ -71,7 +72,7 @@ data = ExtResource("13_yivur")
 ability_scene = ExtResource("12_1o4ee")
 animation_name = &"ability_e"
 
-[sub_resource type="Resource" id="Resource_6osn5"]
+[sub_resource type="Resource" id="Resource_pykoi"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 3.0
@@ -108,6 +109,7 @@ shape = SubResource("WorldBoundaryShape3D_ilkvm")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath("..")
+script = ExtResource("5_eclhg")
 
 [node name="CanvasLayerHUD" type="CanvasLayer" parent="."]
 
@@ -244,10 +246,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.196)
 [node name="Unit" parent="." instance=ExtResource("8_risqi")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.31485, 0, 0)
 team = &"player"
-ability_q = SubResource("Resource_iooyd")
-ability_w = SubResource("Resource_o8ter")
-ability_e = SubResource("Resource_ji41d")
-ability_a = SubResource("Resource_6osn5")
+ability_q = SubResource("Resource_h8g86")
+ability_w = SubResource("Resource_41o5x")
+ability_e = SubResource("Resource_ktc2y")
+ability_a = SubResource("Resource_pykoi")
 ability_s = null
 
 [editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonQ"]

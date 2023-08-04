@@ -1,12 +1,14 @@
-[gd_scene load_steps=25 format=3 uid="uid://bvl5x7v8tekda"]
+[gd_scene load_steps=28 format=3 uid="uid://bvl5x7v8tekda"]
 
 [ext_resource type="PackedScene" uid="uid://db7ry8dwek5ww" path="res://core/unit/unit.tscn" id="1_pyx1o"]
 [ext_resource type="PackedScene" uid="uid://rj7r3kdmajee" path="res://assets/kitty.glb" id="2_xewvb"]
 [ext_resource type="PackedScene" uid="uid://cwlvdwlmcuhgj" path="res://design/abilities/test_ability_circle/test_ability_circle.tscn" id="2_yob13"]
 [ext_resource type="Script" path="res://core/ability/unit_ability.gd" id="3_gagjd"]
 [ext_resource type="Resource" uid="uid://dygbavk4krv6l" path="res://design/abilities/test_ability_circle/test_ability_circle.tres" id="3_pf3e8"]
+[ext_resource type="PackedScene" uid="uid://kxxk6vsauyti" path="res://design/abilities/test_ability_homing/test_ability_homing.tscn" id="5_fbdw6"]
 [ext_resource type="PackedScene" uid="uid://df0801cyqjuhx" path="res://design/abilities/test_ability_arc/test_ability_arc.tscn" id="5_vbg2e"]
 [ext_resource type="Resource" uid="uid://cj028r63ey33m" path="res://design/abilities/test_ability_arc/test_ability_arc.tres" id="6_e2paw"]
+[ext_resource type="Resource" uid="uid://c1m72bnfinb61" path="res://design/abilities/test_ability_homing/test_ability_homing.tres" id="6_e8r0k"]
 [ext_resource type="PackedScene" uid="uid://xu8f5ygcshqe" path="res://design/abilities/test_ability_line/test_ability_line.tscn" id="7_ebj46"]
 [ext_resource type="Resource" uid="uid://cr3co4s81sy76" path="res://design/abilities/test_ability_line/test_ability_line.tres" id="8_axlml"]
 [ext_resource type="Texture2D" uid="uid://lat7ahrw014r" path="res://assets/icon.svg" id="9_6rnju"]
@@ -21,6 +23,16 @@ cast_range = 10
 data = ExtResource("3_pf3e8")
 ability_scene = ExtResource("2_yob13")
 animation_name = &"ability_q"
+
+[sub_resource type="Resource" id="Resource_8iu0i"]
+resource_local_to_scene = true
+script = ExtResource("3_gagjd")
+base_cooldown = 3.0
+resource_cost = 0.0
+cast_range = 10
+data = ExtResource("6_e8r0k")
+ability_scene = ExtResource("5_fbdw6")
+animation_name = &"ability_w"
 
 [sub_resource type="Resource" id="Resource_h2hsc"]
 resource_local_to_scene = true
@@ -174,10 +186,11 @@ _data = {
 "run": SubResource("Animation_j78y4")
 }
 
-[node name="Unit" instance=ExtResource("1_pyx1o")]
+[node name="Kitty" instance=ExtResource("1_pyx1o")]
 unit_name = "Kitty"
 team = &"enemy"
 ability_q = SubResource("Resource_j1j3g")
+ability_w = SubResource("Resource_8iu0i")
 ability_e = SubResource("Resource_h2hsc")
 ability_a = SubResource("Resource_i1yar")
 ability_s = SubResource("Resource_sbb5e")

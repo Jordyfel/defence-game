@@ -25,23 +25,24 @@ func _unhandled_input(event: InputEvent) -> void:
 func start_game() -> void:
 	for i in 1:
 		var new_unit: Unit = load("res://design/units/kitty.tscn").instantiate()
-		new_unit.position.x += i
+		new_unit.position = $UnitSpawn.position
 		new_unit.ask_player_for_target.connect(_on_ask_player_for_target)
 		new_unit.input_event.connect(_on_unit_clicked.bind(new_unit))
 		$Unit.input_event.connect(_on_unit_clicked.bind($Unit))
-		$UnitSpawn.add_child(new_unit, true)
+		add_child(new_unit, true)
 		%BottomBar.connect_to_unit(new_unit)
 		new_unit.get_node(^"NavigationAgent3D").avoidance_layers = 1
 		new_unit.get_node(^"NavigationAgent3D").avoidance_mask = 1
 
 
-func _on_ask_player_for_target(source_unit: Unit, ability: UnitAbility) -> void:
+func _on_ask_player_for_target(source_unit: Unit, ability_index: String) -> void:
+	var ability = source_unit.abilities[ability_index]
 	targeting = true
 	var target
 	
 	match ability.data.target_mode:
 		AbilityData.TargetMode.NONE:
-			source_unit.activate_ability(ability, null)
+			source_unit.activate_ability.rpc_id(1, ability_index, null)
 			targeting = false
 			return
 	
@@ -62,13 +63,11 @@ func _on_ask_player_for_target(source_unit: Unit, ability: UnitAbility) -> void:
 			match result["source"]:
 				unit_clicked:
 					if ability.data.is_valid_target(source_unit, result["data"]):
-						target = result["data"]
-				_:
-					pass
+						target = result["data"].get_path()
 	
 	targeting = false
 	if target:
-		source_unit.activate_ability(ability, target)
+		source_unit.activate_ability.rpc_id(1, ability_index, target)
 
 
 func _on_floor_clicked(_camera: Node, event: InputEvent, event_position: Vector3,_normal: Vector3,
@@ -93,8 +92,10 @@ func _on_unit_clicked(_camera: Node, event: InputEvent, _event_position: Vector3
 
 @rpc("any_peer", "call_local", "reliable")
 func move_unit(target_position: Vector3) -> void:
-	for unit in $UnitSpawn.get_children():
-		unit.command_move.rpc(target_position)
+	for unit in get_children():
+		if unit is Unit:
+			if unit.team == &"enemy":
+				unit.command_move.rpc(target_position)
 	
 	#$Unit.command_move.rpc(target_position)
 	#$Unit.command_move(target_position)

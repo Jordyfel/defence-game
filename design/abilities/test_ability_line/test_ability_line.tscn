@@ -31,13 +31,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 [node name="CollisionShape3D" parent="Area3D" index="0"]
 shape = SubResource("SphereShape3D_lour7")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="1"]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." index="2"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." index="1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 mesh = SubResource("BoxMesh_e0jcb")
 
-[node name="GPUParticles3D" type="GPUParticles3D" parent="." index="3"]
+[node name="GPUParticles3D" type="GPUParticles3D" parent="." index="2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 amount = 16
 lifetime = 0.6

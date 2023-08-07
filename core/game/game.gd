@@ -36,17 +36,36 @@ func start_game() -> void:
 
 
 func _on_ask_player_for_target(source_unit: Unit, ability_index: String) -> void:
-	var ability = source_unit.abilities[ability_index]
+	var ability: UnitAbility = source_unit.abilities[ability_index]
 	targeting = true
 	var target
+	var range_indicator: Sprite3D
 	
 	match ability.data.target_mode:
 		AbilityData.TargetMode.NONE:
-			source_unit.activate_ability.rpc_id(1, ability_index, null)
 			targeting = false
+			source_unit.activate_ability.rpc_id(1, ability_index, null)
 			return
-	
-		AbilityData.TargetMode.POSITION:
+		
+		AbilityData.TargetMode.UNIT:
+			range_indicator = load("res://core/game/range_indicator.tscn").instantiate()
+			range_indicator.scale *= ability.cast_range
+			source_unit.add_child(range_indicator)
+			
+			var signals = SignalCombiner.new([floor_clicked, unit_clicked, cancel])
+			var result = await signals.completed_any
+			match result["source"]:
+				unit_clicked:
+					if ability.data.is_valid_target(source_unit, result["data"]):
+						target = result["data"].get_path()
+		
+		_:
+			if ability.data.target_mode == AbilityData.TargetMode.DETACHED_CIRCLE or \
+					ability.data.target_mode == AbilityData.TargetMode.POSITION:
+				range_indicator = load("res://core/game/range_indicator.tscn").instantiate()
+				range_indicator.scale *= ability.cast_range
+				source_unit.add_child(range_indicator)
+			
 			var signals = SignalCombiner.new([floor_clicked, unit_clicked, cancel])
 			var result = await signals.completed_any
 			match result["source"]:
@@ -56,14 +75,9 @@ func _on_ask_player_for_target(source_unit: Unit, ability_index: String) -> void
 					target = result["data"].global_position
 				cancel:
 					pass
-		
-		AbilityData.TargetMode.UNIT:
-			var signals = SignalCombiner.new([floor_clicked, unit_clicked, cancel])
-			var result = await signals.completed_any
-			match result["source"]:
-				unit_clicked:
-					if ability.data.is_valid_target(source_unit, result["data"]):
-						target = result["data"].get_path()
+	
+	if range_indicator:
+		range_indicator.queue_free()
 	
 	targeting = false
 	if target:

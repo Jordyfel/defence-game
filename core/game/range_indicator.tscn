@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://btws6kyals8aa"]
+
+[ext_resource type="Script" path="res://core/game/range_indicator_draw.gd" id="1_2kh72"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_5jt2d"]
+viewport_path = NodePath("SubViewport")
+
+[node name="RangeIndicator" type="Sprite3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+pixel_size = 0.0039
+texture = SubResource("ViewportTexture_5jt2d")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+msaa_2d = 2
+
+[node name="RangeIndicatorDraw" type="Node2D" parent="SubViewport"]
+script = ExtResource("1_2kh72")

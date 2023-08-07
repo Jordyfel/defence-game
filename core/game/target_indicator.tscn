@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://bkjqcqsjodlny"]
+
+[ext_resource type="Script" path="res://core/game/target_indicator_draw.gd" id="1_vbd1f"]
+
+[node name="TargetIndicator" type="Sprite3D"]
+pixel_size = 0.0039
+
+[node name="SubViewport" type="SubViewport" parent="."]
+
+[node name="Node2D" type="Node2D" parent="SubViewport"]
+script = ExtResource("1_vbd1f")

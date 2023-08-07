@@ -130,13 +130,13 @@ func activate_ability(ability_index: String, target: Variant) -> void:
 	ability_scene.effect_time_reached.connect(_affect_unit.bind(ability, ability_scene))
 	
 	if target is Vector3:
-		if ability.data.target_shape == AbilityData.TargetShape.DETACHED_CIRCLE:
+		if ability.data.target_mode == AbilityData.TargetMode.DETACHED_CIRCLE:
 			ability_scene.position = target
 			$/root/Game.add_child(ability_scene, true)
-		elif ability.data.target_shape == AbilityData.TargetShape.ATTACHED_ARC:
+		elif ability.data.target_mode == AbilityData.TargetMode.ATTACHED_ARC:
 			ability_scene.look_at_from_position($AttackSource.global_position, target, Vector3.UP, true)
 			$/root/Game.add_child(ability_scene, true)
-		elif ability.data.target_shape == AbilityData.TargetShape.ATTACHED_LINE:
+		elif ability.data.target_mode == AbilityData.TargetMode.ATTACHED_LINE:
 			ability_scene.look_at_from_position(global_position, target, Vector3.UP, true)
 			$/root/Game.add_child(ability_scene, true)
 	
@@ -163,7 +163,7 @@ func activate_keyframe() -> void:
 func _affect_unit(unit: Unit, ability: UnitAbility, ability_scene: AbilityScene) -> void:
 	if ability.data.is_valid_target(self, unit):
 		ability.data.activate_effect(self, unit)
-		if ability.data.projectile_mode == AbilityData.ProjectileMode.LINEAR:
+		if ability.data.is_projectile and not ability.data.target_mode == AbilityData.TargetMode.UNIT:
 			if not ability.data.piercing:
 				ability_scene.queue_free()
 

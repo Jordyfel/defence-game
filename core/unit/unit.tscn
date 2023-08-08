@@ -11,10 +11,11 @@ script = ExtResource("3_ghcj0")
 name = "Stop"
 icon = ExtResource("2_4t52w")
 target_mode = 0
-target_shape = 0
-target_area_radius = 0.0
+circle_radius = 0.0
+arc_range = 0.0
 arc_width = 0.0
-projectile_mode = 0
+line_width = 0.0
+is_projectile = false
 projectile_speed = 0.0
 max_travel_distance = 0.0
 piercing = false
@@ -52,6 +53,7 @@ ability_s = SubResource("Resource_6fqjh")
 
 [node name="ScuffedHealthBar" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+cast_shadow = 0
 pixel_size = 0.0005
 billboard = 1
 transparent = false
@@ -64,6 +66,7 @@ region_rect = Rect2(0, 0, 200, 10)
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
 path_desired_distance = 2.0
+avoidance_enabled = true
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_interval = 0.008

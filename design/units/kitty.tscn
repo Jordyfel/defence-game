@@ -210,7 +210,7 @@ bones/11/rotation = Quaternion(0.662269, -0.748981, 0.0206426, 0.000943979)
 
 [node name="NavigationAgent3D" parent="." index="3"]
 path_desired_distance = 1.0
-avoidance_enabled = true
+path_height_offset = 0.5
 height = 0.5
 radius = 0.4
 avoidance_layers = 2

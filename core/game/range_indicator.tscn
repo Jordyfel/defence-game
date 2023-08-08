@@ -6,8 +6,8 @@
 viewport_path = NodePath("SubViewport")
 
 [node name="RangeIndicator" type="Sprite3D"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 pixel_size = 0.0039
+axis = 1
 texture = SubResource("ViewportTexture_5jt2d")
 
 [node name="SubViewport" type="SubViewport" parent="."]

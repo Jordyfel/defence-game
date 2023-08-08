@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://btws6kyals8aa"]
 
-[ext_resource type="Script" path="res://core/game/range_indicator_draw.gd" id="1_2kh72"]
+[ext_resource type="Script" path="res://core/game/cast_indicators/range_indicator_draw.gd" id="1_2kh72"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_5jt2d"]
 viewport_path = NodePath("SubViewport")

@@ -51,7 +51,7 @@ func _on_ask_player_for_target(source_unit: Unit, ability_index: String) -> void
 	if ability.data.target_mode == AbilityData.TargetMode.DETACHED_CIRCLE or \
 			ability.data.target_mode == AbilityData.TargetMode.POSITION or \
 			ability.data.target_mode == AbilityData.TargetMode.UNIT:
-		range_indicator = load("res://core/game/range_indicator.tscn").instantiate()
+		range_indicator = load("res://core/game/cast_indicators/range_indicator.tscn").instantiate()
 		range_indicator.position.y += 0.001
 		range_indicator.scale *= ability.cast_range
 		source_unit.add_child(range_indicator)
@@ -59,7 +59,7 @@ func _on_ask_player_for_target(source_unit: Unit, ability_index: String) -> void
 	if ability.data.target_mode == AbilityData.TargetMode.DETACHED_CIRCLE or \
 			ability.data.target_mode == AbilityData.TargetMode.ATTACHED_ARC or \
 			ability.data.target_mode == AbilityData.TargetMode.ATTACHED_LINE:
-		target_indicator = load("res://core/game/target_indicator.tscn").instantiate()
+		target_indicator = load("res://core/game/cast_indicators/target_indicator.tscn").instantiate()
 		target_indicator.unit_ability = ability
 		source_unit.add_child(target_indicator)
 	

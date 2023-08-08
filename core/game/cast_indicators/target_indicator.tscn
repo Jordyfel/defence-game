@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bkjqcqsjodlny"]
 
-[ext_resource type="Script" path="res://core/game/target_indicator.gd" id="1_rff4g"]
-[ext_resource type="Script" path="res://core/game/target_indicator_draw.gd" id="1_vbd1f"]
+[ext_resource type="Script" path="res://core/game/cast_indicators/target_indicator.gd" id="1_rff4g"]
+[ext_resource type="Script" path="res://core/game/cast_indicators/target_indicator_draw.gd" id="1_vbd1f"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_sj6as"]
 viewport_path = NodePath("SubViewport")

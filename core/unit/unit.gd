@@ -153,7 +153,10 @@ func _start_casting_ability(ability_index: String) -> void:
 	ability_cooldown_started.emit(abilities.find_key(ability), ability.base_cooldown)
 	ability.cooldown_remaining = ability.base_cooldown
 	ability.is_on_cooldown = true
-	animation_player.play(ability.animation_name)
+	
+	var animation_name = "ability_" + ability_index
+	assert(animation_player.has_animation(animation_name))
+	animation_player.play(animation_name)
 
 
 func activate_keyframe() -> void:

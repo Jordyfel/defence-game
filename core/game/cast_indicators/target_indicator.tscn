@@ -14,6 +14,7 @@ script = ExtResource("1_rff4g")
 
 [node name="SubViewport" type="SubViewport" parent="."]
 transparent_bg = true
+msaa_2d = 2
 
 [node name="Node2D" type="Node2D" parent="SubViewport"]
 script = ExtResource("1_vbd1f")

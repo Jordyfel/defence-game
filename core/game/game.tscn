@@ -44,25 +44,23 @@ albedo_texture = ExtResource("7_oq0gq")
 material = SubResource("StandardMaterial3D_r7u7k")
 size = Vector3(2, 2, 2)
 
-[sub_resource type="Resource" id="Resource_qljwc"]
+[sub_resource type="Resource" id="Resource_d1mnj"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 3.0
 resource_cost = 0.0
 cast_range = 10
 ability_scene = ExtResource("9_0j6tn")
-animation_name = &"ability_q"
 
-[sub_resource type="Resource" id="Resource_uvmpb"]
+[sub_resource type="Resource" id="Resource_8on8l"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 3.0
 resource_cost = 0.0
 cast_range = 10
 ability_scene = ExtResource("12_i3ab4")
-animation_name = &"ability_w"
 
-[sub_resource type="Resource" id="Resource_302np"]
+[sub_resource type="Resource" id="Resource_g0tyc"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 3.0
@@ -70,9 +68,8 @@ resource_cost = 0.0
 cast_range = 10
 data = ExtResource("13_yivur")
 ability_scene = ExtResource("12_1o4ee")
-animation_name = &"ability_e"
 
-[sub_resource type="Resource" id="Resource_1hifr"]
+[sub_resource type="Resource" id="Resource_51edb"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 3.0
@@ -80,7 +77,6 @@ resource_cost = 0.0
 cast_range = 10
 data = ExtResource("14_0i1ub")
 ability_scene = ExtResource("12_i3ab4")
-animation_name = &"ability_w"
 
 [node name="Game" type="Node3D"]
 script = ExtResource("1_bl3g5")
@@ -249,10 +245,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.196)
 [node name="Unit" parent="." instance=ExtResource("8_risqi")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.31485, 0, 0)
 team = &"player"
-ability_q = SubResource("Resource_qljwc")
-ability_w = SubResource("Resource_uvmpb")
-ability_e = SubResource("Resource_302np")
-ability_a = SubResource("Resource_1hifr")
+ability_q = SubResource("Resource_d1mnj")
+ability_w = SubResource("Resource_8on8l")
+ability_e = SubResource("Resource_g0tyc")
+ability_a = SubResource("Resource_51edb")
 ability_s = null
 
 [editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonQ"]

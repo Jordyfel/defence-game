@@ -29,11 +29,12 @@ func create_arc_polygon(center: Vector2, radius: float, width_deg: float, face_a
 	var arc_width:= deg_to_rad(width_deg)
 	
 	var points:= PackedVector2Array()
-	points.push_back(center)
+	points.resize(point_count + 2)
+	points[-1] = center
 	
 	var start_angle:= face_angle - arc_width / 2
 	for point_index in point_count + 1:
 		var point_angle = start_angle + (point_index as float / point_count) * arc_width
-		points.push_back(center + Vector2.from_angle(point_angle) * radius)
+		points[point_index] = center + Vector2.from_angle(point_angle) * radius
 	
 	return points

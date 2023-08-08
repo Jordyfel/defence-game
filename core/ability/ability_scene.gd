@@ -42,11 +42,11 @@ func activate_effect() -> void:
 	if not multiplayer.is_server():
 		return
 	
-	# Maybe remove the filter if everything in unit layer keeps being only units.
-	var targets = area.get_overlapping_bodies().filter(func(node): return node is Unit)
+	var targets = area.get_overlapping_bodies()
 	if not is_zero_approx(data.arc_width):
 		targets =  targets.filter(_is_in_arc)
 	for target in targets:
+		assert(target is Unit, "Only units are supposed to end up here. Mind the physics layers.")
 		effect_time_reached.emit(target)
 
 

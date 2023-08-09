@@ -6,7 +6,8 @@ extends Resource
 @export var base_cooldown:= 6.0
 @export var resource_cost: float
 @export var cast_range:= 10
-# cast time?
+@export var cast_time: float
+@export var is_castable_while_moving: bool # Not implemented yet...
 @export var data: AbilityData
 @export var ability_scene: PackedScene
 

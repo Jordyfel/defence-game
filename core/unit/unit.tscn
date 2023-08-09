@@ -26,8 +26,9 @@ script = ExtResource("4_r0fng")
 base_cooldown = 0.0
 resource_cost = 0.0
 cast_range = 0
+cast_time = 0.0
+is_castable_while_moving = false
 data = SubResource("Resource_uy0gr")
-animation_name = &""
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_f14lf"]
 properties/0/path = NodePath(".:position")
@@ -71,5 +72,8 @@ avoidance_enabled = true
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_interval = 0.008
 replication_config = SubResource("SceneReplicationConfig_f14lf")
+
+[node name="CastAnimationLockTimer" type="Timer" parent="."]
+one_shot = true
 
 [connection signal="navigation_finished" from="NavigationAgent3D" to="." method="_on_navigation_agent_3d_navigation_finished"]

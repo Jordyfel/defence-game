@@ -116,7 +116,7 @@ func move_unit(target_position: Vector3) -> void:
 	for unit in get_children():
 		if unit is Unit:
 			if unit.team == &"enemy":
-				unit.command_move.rpc(target_position)
+				unit.command_move.rpc_id(1, target_position)
 	
 	#$Unit.command_move.rpc(target_position)
 	#$Unit.command_move(target_position)

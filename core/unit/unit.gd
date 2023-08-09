@@ -4,9 +4,8 @@ extends CharacterBody3D
 
 
 signal ask_player_for_target(unit: Unit, ability: UnitAbility)
-signal activate_keyframe_reached
-
 signal ability_cooldown_started(ability_key: String, cooldown_duration: float)
+signal override_queued_command
 
 @export var unit_name: String
 @export var team: StringName
@@ -41,6 +40,7 @@ var health: float:
 @onready var health_bar:= $ScuffedHealthBar
 @onready var navigation_agent:= $NavigationAgent3D
 @onready var animation_player:= $AnimationPlayer
+@onready var cast_lock_timer:= $CastAnimationLockTimer
 
 # For faster iteration.
 var _valid_abilities: Array[UnitAbility] = []
@@ -55,15 +55,39 @@ func _ready() -> void:
 	animation_player.play(&"idle")
 
 
-@rpc("call_local", "reliable")
+@rpc("any_peer", "call_local", "reliable")
 func command_move(target_position: Vector3) -> void:
+	override_queued_command.emit()
+	if not cast_lock_timer.is_stopped():
+		var signals = SignalCombiner.new([cast_lock_timer.timeout, override_queued_command])
+		var result = await signals.completed_any
+		if result["source"] == override_queued_command:
+			return
+	
+	_move.rpc(target_position)
+
+
+@rpc("call_local", "reliable")
+func _move(target_position: Vector3) -> void:
 	look_at(target_position + Vector3(0, position.y, 0), Vector3.UP, true)
 	navigation_agent.set_target_position(target_position)
 	animation_player.play(&"run")
 
 
-@rpc("call_local", "reliable")
+@rpc("any_peer", "call_local", "reliable")
 func command_stop() -> void:
+	override_queued_command.emit()
+	if not cast_lock_timer.is_stopped():
+		var signals = SignalCombiner.new([cast_lock_timer.timeout, override_queued_command])
+		var result = await signals.completed_any
+		if result["source"] == override_queued_command:
+			return
+	
+	_stop.rpc()
+
+
+@rpc("call_local", "reliable")
+func _stop() -> void:
 	navigation_agent.set_target_position(global_position)
 	animation_player.play(&"idle")
 
@@ -112,20 +136,45 @@ func request_target(ability_key: String) -> void:
 
 @rpc("any_peer", "call_local", "reliable")
 func activate_ability(ability_index: String, target: Variant) -> void:
-	var ability = abilities[ability_index]
+	var ability: UnitAbility = abilities[ability_index]
 	assert(target is Vector3 or target is NodePath or target == null)
 	assert(not ability.is_on_cooldown)
+	if ability.is_on_cooldown:
+		return # Shouldn't happen, but it does, so avoid casting twice until it's fixed.
 	
 	if target is NodePath:
 		target = get_node(target)
 	
 	if ability == ability_s:
-		command_stop.rpc()
+		command_stop()
 		return
+	
+	if ability.data.target_mode == AbilityData.TargetMode.POSITION or \
+			ability.data.target_mode == AbilityData.TargetMode.DETACHED_CIRCLE or \
+			ability.data.target_mode == AbilityData.TargetMode.UNIT:
+		var target_position = target if target is Vector3 else target.global_position
+		if global_position.distance_to(target_position) > ability.cast_range:
+			return
+	
+	if not cast_lock_timer.is_stopped():
+		var signals = SignalCombiner.new([cast_lock_timer.timeout, override_queued_command])
+		var result = await signals.completed_any
+		if result["source"] == override_queued_command:
+			return
 	
 	_start_casting_ability.rpc(ability_index)
 	
-	await activate_keyframe_reached
+	if not is_zero_approx(ability.cast_time):
+#		if ability.is_castable_while_moving:
+#			cast_lock_timer.start(ability.cast_time)
+#			await cast_lock_timer.timeout
+#		else:
+			var prev_move_target_position = navigation_agent.get_target_position()
+			command_stop()
+			cast_lock_timer.start(ability.cast_time)
+			command_move(prev_move_target_position)
+			await cast_lock_timer.timeout
+	
 	var ability_scene: AbilityScene = ability.ability_scene.instantiate()
 	ability_scene.effect_time_reached.connect(_affect_unit.bind(ability, ability_scene))
 	
@@ -144,7 +193,6 @@ func activate_ability(ability_index: String, target: Variant) -> void:
 		ability_scene.projectile_target_path = target.get_path()
 		ability_scene.look_at_from_position(global_position, target.global_position, Vector3.UP, true)
 		$/root/Game.add_child(ability_scene, true)
-		
 
 
 @rpc("call_local", "reliable")
@@ -157,10 +205,6 @@ func _start_casting_ability(ability_index: String) -> void:
 	var animation_name = "ability_" + ability_index
 	assert(animation_player.has_animation(animation_name))
 	animation_player.play(animation_name)
-
-
-func activate_keyframe() -> void:
-	activate_keyframe_reached.emit()
 
 
 func _affect_unit(unit: Unit, ability: UnitAbility, ability_scene: AbilityScene) -> void:

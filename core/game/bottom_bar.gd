@@ -28,7 +28,8 @@ func connect_to_unit(unit: Unit) -> void:
 
 
 func _on_ability_button_pressed(_ability_button: Control, ability_key: String) -> void:
-	connected_unit.request_target(ability_key)
+	if not $/root/Game.targeting:
+		connected_unit.request_target(ability_key)
 
 
 func _on_ability_cooldown_started(ability_key: String, cooldown_duration: float) -> void:
@@ -36,9 +37,11 @@ func _on_ability_cooldown_started(ability_key: String, cooldown_duration: float)
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if $/root/Game.targeting:
+		return
+	
 	if event.is_action_pressed("left_click_temp"):
-		if not $/root/Game.targeting: # hopefully temp...
-			connected_unit.request_target("a")
+		connected_unit.request_target("a")
 	
 	if not event is InputEventKey:
 		return

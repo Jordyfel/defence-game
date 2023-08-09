@@ -8,6 +8,7 @@ signal completed_all(data: Dictionary)
 
 var signals: Array[Signal]
 var signal_data: Dictionary
+var first_any_emitted:= false
 
 
 
@@ -23,7 +24,9 @@ func _extract_data(s: Signal) -> void:
 
 
 func _on_signal_emitted(s: Signal, data: Variant) -> void:
-	completed_any.emit({"source": s, "data": data}) # ?
+	if not first_any_emitted:
+		first_any_emitted = true
+		completed_any.emit({"source": s, "data": data})
 	signal_data[s] = data
 	signals.erase(s)
 	if signals.is_empty():

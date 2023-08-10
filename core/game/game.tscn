@@ -44,7 +44,7 @@ albedo_texture = ExtResource("7_oq0gq")
 material = SubResource("StandardMaterial3D_r7u7k")
 size = Vector3(2, 2, 2)
 
-[sub_resource type="Resource" id="Resource_mxyn4"]
+[sub_resource type="Resource" id="Resource_204yi"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 3.0
@@ -54,7 +54,7 @@ cast_time = 0.0
 is_castable_while_moving = false
 ability_scene = ExtResource("9_0j6tn")
 
-[sub_resource type="Resource" id="Resource_qmwb7"]
+[sub_resource type="Resource" id="Resource_oj5s5"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 3.0
@@ -64,7 +64,7 @@ cast_time = 0.0
 is_castable_while_moving = false
 ability_scene = ExtResource("12_i3ab4")
 
-[sub_resource type="Resource" id="Resource_lgcxo"]
+[sub_resource type="Resource" id="Resource_to352"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 3.0
@@ -75,7 +75,7 @@ is_castable_while_moving = false
 data = ExtResource("13_yivur")
 ability_scene = ExtResource("12_1o4ee")
 
-[sub_resource type="Resource" id="Resource_w5wct"]
+[sub_resource type="Resource" id="Resource_sj6d2"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 3.0
@@ -253,10 +253,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.196)
 [node name="Unit" parent="." instance=ExtResource("8_risqi")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.31485, 0, 0)
 team = &"player"
-ability_q = SubResource("Resource_mxyn4")
-ability_w = SubResource("Resource_qmwb7")
-ability_e = SubResource("Resource_lgcxo")
-ability_a = SubResource("Resource_w5wct")
+ability_q = SubResource("Resource_204yi")
+ability_w = SubResource("Resource_oj5s5")
+ability_e = SubResource("Resource_to352")
+ability_a = SubResource("Resource_sj6d2")
 ability_s = null
 
 [editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonQ"]

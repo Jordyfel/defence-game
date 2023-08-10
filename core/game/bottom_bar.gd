@@ -41,7 +41,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	
 	if event.is_action_pressed("left_click_temp"):
-		connected_unit.request_target("a")
+		connected_unit.request_target("a", false)
 	
 	if not event is InputEventKey:
 		return

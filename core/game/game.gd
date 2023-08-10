@@ -36,7 +36,7 @@ func start_game() -> void:
 		new_unit.get_node(^"NavigationAgent3D").avoidance_mask = 1
 
 
-func _on_ask_player_for_target(source_unit: Unit, ability_index: String) -> void:
+func _on_ask_player_for_target(source_unit: Unit, ability_index: String, show_indicators: bool) -> void:
 	var ability: UnitAbility = source_unit.abilities[ability_index]
 	var range_indicator: Sprite3D
 	var target_indicator: TargetIndicator
@@ -48,20 +48,21 @@ func _on_ask_player_for_target(source_unit: Unit, ability_index: String) -> void
 	
 	targeting = true
 	
-	if ability.data.target_mode == AbilityData.TargetMode.DETACHED_CIRCLE or \
-			ability.data.target_mode == AbilityData.TargetMode.POSITION or \
-			ability.data.target_mode == AbilityData.TargetMode.UNIT:
-		range_indicator = load("res://core/game/cast_indicators/range_indicator.tscn").instantiate()
-		range_indicator.position.y += 0.001
-		range_indicator.scale *= ability.cast_range
-		source_unit.add_child(range_indicator)
-	
-	if ability.data.target_mode == AbilityData.TargetMode.DETACHED_CIRCLE or \
-			ability.data.target_mode == AbilityData.TargetMode.ATTACHED_ARC or \
-			ability.data.target_mode == AbilityData.TargetMode.ATTACHED_LINE:
-		target_indicator = load("res://core/game/cast_indicators/target_indicator.tscn").instantiate()
-		target_indicator.unit_ability = ability
-		source_unit.add_child(target_indicator)
+	if show_indicators:
+		if ability.data.target_mode == AbilityData.TargetMode.DETACHED_CIRCLE or \
+				ability.data.target_mode == AbilityData.TargetMode.POSITION or \
+				ability.data.target_mode == AbilityData.TargetMode.UNIT:
+			range_indicator = load("res://core/game/cast_indicators/range_indicator.tscn").instantiate()
+			range_indicator.position.y += 0.001
+			range_indicator.scale *= ability.cast_range
+			source_unit.add_child(range_indicator)
+		
+		if ability.data.target_mode == AbilityData.TargetMode.DETACHED_CIRCLE or \
+				ability.data.target_mode == AbilityData.TargetMode.ATTACHED_ARC or \
+				ability.data.target_mode == AbilityData.TargetMode.ATTACHED_LINE:
+			target_indicator = load("res://core/game/cast_indicators/target_indicator.tscn").instantiate()
+			target_indicator.unit_ability = ability
+			source_unit.add_child(target_indicator)
 	
 	if ability.data.target_mode == AbilityData.TargetMode.UNIT:
 		var signals = SignalCombiner.new([floor_clicked, unit_clicked, cancel])

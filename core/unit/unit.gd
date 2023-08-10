@@ -123,7 +123,7 @@ func _on_navigation_agent_3d_navigation_finished() -> void:
 	animation_player.play(&"idle")
 
 
-func request_target(ability_key: String) -> void:
+func request_target(ability_key: String, show_indicators:= true) -> void:
 	var ability: UnitAbility = abilities[ability_key]
 	if not ability:
 		return
@@ -131,7 +131,7 @@ func request_target(ability_key: String) -> void:
 	if ability.is_on_cooldown:
 		return
 	
-	ask_player_for_target.emit(self, ability_key)
+	ask_player_for_target.emit(self, ability_key, show_indicators)
 
 
 @rpc("any_peer", "call_local", "reliable")
@@ -165,15 +165,12 @@ func activate_ability(ability_index: String, target: Variant) -> void:
 	_start_casting_ability.rpc(ability_index)
 	
 	if not is_zero_approx(ability.cast_time):
-#		if ability.is_castable_while_moving:
-#			cast_lock_timer.start(ability.cast_time)
-#			await cast_lock_timer.timeout
-#		else:
-			var prev_move_target_position = navigation_agent.get_target_position()
-			command_stop()
-			cast_lock_timer.start(ability.cast_time)
-			command_move(prev_move_target_position)
-			await cast_lock_timer.timeout
+#		var prev_move_target_position = navigation_agent.get_target_position()
+		command_stop()
+		look_at(target if target is Vector3 else target.global_position, Vector3.UP, true)
+		cast_lock_timer.start(ability.cast_time)
+#		command_move(prev_move_target_position)
+		await cast_lock_timer.timeout
 	
 	var ability_scene: AbilityScene = ability.ability_scene.instantiate()
 	ability_scene.effect_time_reached.connect(_affect_unit.bind(ability, ability_scene))
@@ -183,7 +180,7 @@ func activate_ability(ability_index: String, target: Variant) -> void:
 			ability_scene.position = target
 			$/root/Game.add_child(ability_scene, true)
 		elif ability.data.target_mode == AbilityData.TargetMode.ATTACHED_ARC:
-			ability_scene.look_at_from_position($AttackSource.global_position, target, Vector3.UP, true)
+			ability_scene.look_at_from_position(global_position, target, Vector3.UP, true)
 			$/root/Game.add_child(ability_scene, true)
 		elif ability.data.target_mode == AbilityData.TargetMode.ATTACHED_LINE:
 			ability_scene.look_at_from_position(global_position, target, Vector3.UP, true)

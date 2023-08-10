@@ -52,7 +52,7 @@ _data = {
 "effect": SubResource("Animation_dinxa")
 }
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_uaqb8"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_44ijp"]
 radius = 2.5
 
 [node name="Ability" instance=ExtResource("1_pjc58")]
@@ -72,4 +72,4 @@ libraries = {
 }
 
 [node name="CollisionShape3D" parent="Area3D" index="0"]
-shape = SubResource("SphereShape3D_uaqb8")
+shape = SubResource("SphereShape3D_44ijp")

@@ -43,19 +43,9 @@ func activate_effect() -> void:
 		return
 	
 	var targets = area.get_overlapping_bodies()
-	if not is_zero_approx(data.arc_width):
-		targets =  targets.filter(_is_in_arc)
 	for target in targets:
 		assert(target is Unit, "Only units are supposed to end up here. Mind the physics layers.")
 		effect_time_reached.emit(target)
-
-
-func _is_in_arc(unit: Unit) -> bool:
-	var position2 = Vector2(global_position.x, global_position.z)
-	var unit_position2 = Vector2(unit.position.x, unit.position.z)
-	var forward2 = Vector2(global_transform.basis.z.x, global_transform.basis.z.z)
-	var dot = position2.direction_to(unit_position2).dot(forward2)
-	return dot > cos(deg_to_rad(data.arc_width) / 2)
 
 
 func _on_body_entered(body: Node3D) -> void:

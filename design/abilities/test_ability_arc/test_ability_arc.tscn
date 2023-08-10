@@ -1,10 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://df0801cyqjuhx"]
+[gd_scene load_steps=8 format=3 uid="uid://df0801cyqjuhx"]
 
 [ext_resource type="PackedScene" uid="uid://kplvbtnc0ahr" path="res://core/ability/ability_scene.tscn" id="1_ifl6w"]
-[ext_resource type="Script" path="res://core/utility/arc_shape_generator.gd" id="2_1dsvw"]
-[ext_resource type="Resource" uid="uid://cj028r63ey33m" path="res://design/abilities/test_ability_arc/test_ability_arc.tres" id="3_5qyrj"]
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_giiku"]
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_wb6a4"]
 points = PackedVector3Array(0.956709, 0, 2.3097, 0.842225, 0, 2.35386, 0.725712, 0, 2.39235, 0.607451, 0, 2.42508, 0.487726, 0, 2.45196, 0.366826, 0, 2.47294, 0.245043, 0, 2.48796, 0.122669, 0, 2.49699, -1.09278e-07, 0, 2.5, -0.122669, 0, 2.49699, -0.245043, 0, 2.48796, -0.366826, 0, 2.47294, -0.487726, 0, 2.45196, -0.60745, 0, 2.42508, -0.725712, 0, 2.39235, -0.842224, 0, 2.35386, -0.956708, 0, 2.3097, 0, 0, 0, 0.956709, 2, 2.3097, 0.842225, 2, 2.35386, 0.725712, 2, 2.39235, 0.607451, 2, 2.42508, 0.487726, 2, 2.45196, 0.366826, 2, 2.47294, 0.245043, 2, 2.48796, 0.122669, 2, 2.49699, -1.09278e-07, 2, 2.5, -0.122669, 2, 2.49699, -0.245043, 2, 2.48796, -0.366826, 2, 2.47294, -0.487726, 2, 2.45196, -0.60745, 2, 2.42508, -0.725712, 2, 2.39235, -0.842224, 2, 2.35386, -0.956708, 2, 2.3097, 0, 2, 0)
 
 [sub_resource type="Animation" id="Animation_squjl"]
@@ -60,7 +58,7 @@ size = Vector3(0.1, 0.1, 0.1)
 [node name="Ability" instance=ExtResource("1_ifl6w")]
 
 [node name="CollisionShape3D" parent="Area3D" index="0"]
-shape = SubResource("ConvexPolygonShape3D_giiku")
+shape = SubResource("ConvexPolygonShape3D_wb6a4")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="1"]
 libraries = {
@@ -76,8 +74,3 @@ one_shot = true
 explosiveness = 0.6
 process_material = SubResource("ParticleProcessMaterial_0pdgq")
 draw_pass_1 = SubResource("BoxMesh_hslu8")
-
-[node name="ArcShapeGenerator" type="Node" parent="." index="4" node_paths=PackedStringArray("collision_shape")]
-script = ExtResource("2_1dsvw")
-ability_data = ExtResource("3_5qyrj")
-collision_shape = NodePath("../Area3D/CollisionShape3D")

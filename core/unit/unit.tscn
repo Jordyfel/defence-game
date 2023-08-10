@@ -1,10 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://db7ry8dwek5ww"]
+[gd_scene load_steps=10 format=3 uid="uid://db7ry8dwek5ww"]
 
 [ext_resource type="Script" path="res://core/unit/unit.gd" id="1_p77fq"]
 [ext_resource type="Texture2D" uid="uid://lat7ahrw014r" path="res://assets/icon.svg" id="2_4t52w"]
-[ext_resource type="Texture2D" uid="uid://d3aaxlho2is00" path="res://assets/healthbar.png" id="2_40ofj"]
 [ext_resource type="Script" path="res://core/ability/ability_data.gd" id="3_ghcj0"]
 [ext_resource type="Script" path="res://core/ability/unit_ability.gd" id="4_r0fng"]
+[ext_resource type="Script" path="res://core/unit/healthbar_draw.gd" id="5_2kgje"]
 
 [sub_resource type="Resource" id="Resource_uy0gr"]
 script = ExtResource("3_ghcj0")
@@ -30,6 +30,9 @@ cast_time = 0.0
 is_castable_while_moving = false
 data = SubResource("Resource_uy0gr")
 
+[sub_resource type="ViewportTexture" id="ViewportTexture_ueyq1"]
+viewport_path = NodePath("HealthBar/SubViewport")
+
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_f14lf"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
@@ -52,7 +55,7 @@ ability_s = SubResource("Resource_6fqjh")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 
-[node name="ScuffedHealthBar" type="Sprite3D" parent="."]
+[node name="HealthBar" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 cast_shadow = 0
 pixel_size = 0.0005
@@ -61,9 +64,16 @@ transparent = false
 double_sided = false
 fixed_size = true
 texture_filter = 0
-texture = ExtResource("2_40ofj")
+texture = SubResource("ViewportTexture_ueyq1")
 region_enabled = true
 region_rect = Rect2(0, 0, 200, 10)
+
+[node name="SubViewport" type="SubViewport" parent="HealthBar"]
+canvas_item_default_texture_filter = 0
+size = Vector2i(204, 16)
+
+[node name="HealthbarDraw" type="Node2D" parent="HealthBar/SubViewport"]
+script = ExtResource("5_2kgje")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
 path_desired_distance = 2.0

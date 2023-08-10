@@ -35,9 +35,10 @@ var abilities:= {}
 var health: float:
 	set(new_health):
 		health = clampf(new_health, 0.0, max_health)
-		health_bar.region_rect.position.x = (1 - health/max_health) * 200
+		$HealthBar/SubViewport/HealthbarDraw.hp_fraction = health / max_health
+		if is_zero_approx(health) and multiplayer.is_server():
+			_die.rpc()
 
-@onready var health_bar:= $ScuffedHealthBar
 @onready var navigation_agent:= $NavigationAgent3D
 @onready var animation_player:= $AnimationPlayer
 @onready var cast_lock_timer:= $CastAnimationLockTimer
@@ -210,6 +211,11 @@ func _affect_unit(unit: Unit, ability: UnitAbility, ability_scene: AbilityScene)
 		if ability.data.is_projectile and not ability.data.target_mode == AbilityData.TargetMode.UNIT:
 			if not ability.data.piercing:
 				ability_scene.queue_free()
+
+
+@rpc("call_local", "reliable")
+func _die():
+	queue_free()
 
 
 func _fill_abilities() -> void:

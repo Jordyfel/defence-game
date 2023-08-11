@@ -5,9 +5,9 @@
 [ext_resource type="NavigationMesh" uid="uid://cm3vlaj5hnuw1" path="res://bin/navigation_mesh.res" id="3_rcq0a"]
 [ext_resource type="Texture2D" uid="uid://bii5o3w5cygfm" path="res://addons/kenney_prototype_textures/dark/texture_07.png" id="4_dbgwi"]
 [ext_resource type="Script" path="res://core/game/spawner.gd" id="5_eclhg"]
-[ext_resource type="Script" path="res://core/game/bottom_bar.gd" id="5_yvbdk"]
-[ext_resource type="Script" path="res://core/game/perf_metrics.gd" id="6_btr40"]
-[ext_resource type="PackedScene" uid="uid://worcrepyo25l" path="res://core/game/ability_button.tscn" id="6_e7hu2"]
+[ext_resource type="Script" path="res://core/game/hud/bottom_bar.gd" id="5_yvbdk"]
+[ext_resource type="Script" path="res://core/game/hud/perf_metrics.gd" id="6_btr40"]
+[ext_resource type="PackedScene" uid="uid://worcrepyo25l" path="res://core/game/hud/ability_button.tscn" id="6_e7hu2"]
 [ext_resource type="Texture2D" uid="uid://cwf02sx1twsb6" path="res://addons/kenney_prototype_textures/light/texture_07.png" id="7_oq0gq"]
 [ext_resource type="PackedScene" uid="uid://bvl5x7v8tekda" path="res://design/units/kitty.tscn" id="8_risqi"]
 [ext_resource type="PackedScene" uid="uid://cwlvdwlmcuhgj" path="res://design/abilities/test_ability_circle/test_ability_circle.tscn" id="9_0j6tn"]
@@ -45,7 +45,7 @@ albedo_texture = ExtResource("7_oq0gq")
 material = SubResource("StandardMaterial3D_r7u7k")
 size = Vector3(2, 2, 2)
 
-[sub_resource type="Resource" id="Resource_s41vi"]
+[sub_resource type="Resource" id="Resource_0joku"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 3.0
@@ -55,7 +55,7 @@ cast_time = 0.0
 is_castable_while_moving = false
 ability_scene = ExtResource("9_0j6tn")
 
-[sub_resource type="Resource" id="Resource_vbqva"]
+[sub_resource type="Resource" id="Resource_bvku2"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 3.0
@@ -65,7 +65,7 @@ cast_time = 0.0
 is_castable_while_moving = false
 ability_scene = ExtResource("12_i3ab4")
 
-[sub_resource type="Resource" id="Resource_cw2bj"]
+[sub_resource type="Resource" id="Resource_n0lmf"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 3.0
@@ -76,7 +76,7 @@ is_castable_while_moving = false
 data = ExtResource("13_yivur")
 ability_scene = ExtResource("12_1o4ee")
 
-[sub_resource type="Resource" id="Resource_2l4ld"]
+[sub_resource type="Resource" id="Resource_iim8u"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 3.0
@@ -275,10 +275,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.196)
 [node name="Unit" parent="." instance=ExtResource("8_risqi")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.31485, 0, 0)
 team = &"player"
-ability_q = SubResource("Resource_s41vi")
-ability_w = SubResource("Resource_vbqva")
-ability_e = SubResource("Resource_cw2bj")
-ability_a = SubResource("Resource_2l4ld")
+ability_q = SubResource("Resource_0joku")
+ability_w = SubResource("Resource_bvku2")
+ability_e = SubResource("Resource_n0lmf")
+ability_a = SubResource("Resource_iim8u")
 ability_s = null
 
 [editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonQ"]

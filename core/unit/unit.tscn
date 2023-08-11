@@ -38,14 +38,10 @@ properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/sync = false
 properties/0/watch = false
-properties/1/path = NodePath(".:rotation")
+properties/1/path = NodePath(".:health")
 properties/1/spawn = false
 properties/1/sync = false
-properties/1/watch = false
-properties/2/path = NodePath(".:health")
-properties/2/spawn = false
-properties/2/sync = false
-properties/2/watch = true
+properties/1/watch = true
 
 [node name="Unit" type="CharacterBody3D"]
 collision_layer = 2

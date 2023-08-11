@@ -1,7 +1,7 @@
 [gd_scene load_steps=30 format=3 uid="uid://bvl5x7v8tekda"]
 
 [ext_resource type="PackedScene" uid="uid://db7ry8dwek5ww" path="res://core/unit/unit.tscn" id="1_pyx1o"]
-[ext_resource type="PackedScene" uid="uid://rj7r3kdmajee" path="res://assets/kitty.glb" id="2_xewvb"]
+[ext_resource type="PackedScene" uid="uid://rj7r3kdmajee" path="res://assets/character_models/kitty.glb" id="2_xewvb"]
 [ext_resource type="PackedScene" uid="uid://cwlvdwlmcuhgj" path="res://design/abilities/test_ability_circle/test_ability_circle.tscn" id="2_yob13"]
 [ext_resource type="Script" path="res://core/ability/unit_ability.gd" id="3_gagjd"]
 [ext_resource type="Resource" uid="uid://dygbavk4krv6l" path="res://design/abilities/test_ability_circle/test_ability_circle.tres" id="3_pf3e8"]

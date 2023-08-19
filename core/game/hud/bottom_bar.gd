@@ -40,7 +40,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if $/root/Game.targeting:
 		return
 	
-	if event.is_action_pressed("left_click_temp"):
+	if event.is_action_pressed("left_click_temp") and connected_unit != null:
 		connected_unit.request_target("a", false)
 	
 	if not event is InputEventKey:

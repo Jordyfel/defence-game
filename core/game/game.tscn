@@ -34,7 +34,7 @@ size = Vector2(40, 40)
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ilkvm"]
 
-[sub_resource type="Resource" id="Resource_ny042"]
+[sub_resource type="Resource" id="Resource_51bwh"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 3.0
@@ -44,7 +44,7 @@ cast_time = 0.0
 is_castable_while_moving = false
 ability_scene = ExtResource("9_0j6tn")
 
-[sub_resource type="Resource" id="Resource_ri4hv"]
+[sub_resource type="Resource" id="Resource_ut74y"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 3.0
@@ -54,7 +54,7 @@ cast_time = 0.0
 is_castable_while_moving = false
 ability_scene = ExtResource("12_i3ab4")
 
-[sub_resource type="Resource" id="Resource_05dgr"]
+[sub_resource type="Resource" id="Resource_gjwyf"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 3.0
@@ -65,7 +65,7 @@ is_castable_while_moving = false
 data = ExtResource("13_yivur")
 ability_scene = ExtResource("12_1o4ee")
 
-[sub_resource type="Resource" id="Resource_pv0yl"]
+[sub_resource type="Resource" id="Resource_iu5ku"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 3.0
@@ -254,10 +254,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.196)
 [node name="Unit" parent="." instance=ExtResource("8_risqi")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.31485, 0, 0)
 team = &"player"
-ability_q = SubResource("Resource_ny042")
-ability_w = SubResource("Resource_ri4hv")
-ability_e = SubResource("Resource_05dgr")
-ability_a = SubResource("Resource_pv0yl")
+ability_q = SubResource("Resource_51bwh")
+ability_w = SubResource("Resource_ut74y")
+ability_e = SubResource("Resource_gjwyf")
+ability_a = SubResource("Resource_iu5ku")
 ability_s = null
 
 [editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonQ"]

@@ -10,9 +10,7 @@ func _ready() -> void:
 
 func _on_join_button_pressed() -> void:
 	Lobby.player_info["name"] = %NameEdit.text
-	var error = Lobby.join_game()
-	if error != 0:
-		printerr(error_string(error))
+	Lobby.join_game()
 	%CreateButton.disabled = true
 	%ExitLobbyButton.show()
 	%PlayerNamesList.show()
@@ -20,9 +18,7 @@ func _on_join_button_pressed() -> void:
 
 func _on_create_game_button_pressed() -> void:
 	Lobby.player_info["name"] = %NameEdit.text
-	var error = Lobby.create_game()
-	if error != 0:
-		printerr(error_string(error))
+	Lobby.create_game()
 	%JoinButton.disabled = true
 	%StartButton.show()
 	%QuitButton.show()

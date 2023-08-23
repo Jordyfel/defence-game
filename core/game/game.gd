@@ -29,7 +29,7 @@ func start_game() -> void:
 		new_unit.position = $UnitSpawn.position
 		new_unit.ask_player_for_target.connect(_on_ask_player_for_target)
 		new_unit.input_event.connect(_on_unit_input.bind(new_unit))
-		$Unit.input_event.connect(_on_unit_input.bind($Unit))
+		$Barbarian.input_event.connect(_on_unit_input.bind($Barbarian))
 		add_child(new_unit, true)
 		%BottomBar.connect_to_unit(new_unit)
 		new_unit.get_node(^"NavigationAgent3D").avoidance_layers = 1

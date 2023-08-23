@@ -237,7 +237,4 @@ libraries = {
 "": SubResource("AnimationLibrary_57sr2")
 }
 
-[node name="AttackSource" type="Marker3D" parent="." index="7"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.33631, 0.50421)
-
 [editable path="Model"]

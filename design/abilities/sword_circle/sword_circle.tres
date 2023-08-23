@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="SwordCircle" load_steps=3 format=3 uid="uid://bmh3ixgjwx3s8"]
+
+[ext_resource type="Script" path="res://design/abilities/sword_circle/sword_circle.gd" id="1_wu1re"]
+[ext_resource type="Texture2D" uid="uid://lat7ahrw014r" path="res://assets/icon.svg" id="1_xrt7y"]
+
+[resource]
+script = ExtResource("1_wu1re")
+damage = 20.0
+name = "Sword Circle"
+icon = ExtResource("1_xrt7y")
+target_mode = 3
+circle_radius = 2.5
+arc_range = 0.0
+arc_width = 0.0
+line_width = 0.0
+is_projectile = false
+projectile_speed = 0.0
+max_travel_distance = 0.0
+piercing = false

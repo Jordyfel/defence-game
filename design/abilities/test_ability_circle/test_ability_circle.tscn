@@ -58,7 +58,6 @@ radius = 2.5
 [node name="Ability" instance=ExtResource("1_pjc58")]
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="." index="0"]
-emitting = false
 amount = 32
 lifetime = 1.6
 one_shot = true

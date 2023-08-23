@@ -1,0 +1,39 @@
+[gd_scene load_steps=5 format=3 uid="uid://ylen243mj5ls"]
+
+[ext_resource type="PackedScene" uid="uid://kplvbtnc0ahr" path="res://core/ability/ability_scene.tscn" id="1_co5u4"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_qlpf5"]
+points = PackedVector3Array(1, 0, 1.73205, 0.884577, 0, 1.79375, 0.765367, 0, 1.84776, 0.642879, 0, 1.89386, 0.517638, 0, 1.93185, 0.390181, 0, 1.96157, 0.261052, 0, 1.98289, 0.130806, 0, 1.99572, -8.74228e-08, 0, 2, -0.130806, 0, 1.99572, -0.261052, 0, 1.98289, -0.390181, 0, 1.96157, -0.517638, 0, 1.93185, -0.642879, 0, 1.89386, -0.765367, 0, 1.84776, -0.884577, 0, 1.79375, -1, 0, 1.73205, 0, 0, 0, 1, 2, 1.73205, 0.884577, 2, 1.79375, 0.765367, 2, 1.84776, 0.642879, 2, 1.89386, 0.517638, 2, 1.93185, 0.390181, 2, 1.96157, 0.261052, 2, 1.98289, 0.130806, 2, 1.99572, -8.74228e-08, 2, 2, -0.130806, 2, 1.99572, -0.261052, 2, 1.98289, -0.390181, 2, 1.96157, -0.517638, 2, 1.93185, -0.642879, 2, 1.89386, -0.765367, 2, 1.84776, -0.884577, 2, 1.79375, -1, 2, 1.73205, 0, 2, 0)
+
+[sub_resource type="Animation" id="Animation_1qoer"]
+resource_name = "effect"
+length = 0.1
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.05),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"activate_effect"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ckwqy"]
+_data = {
+"effect": SubResource("Animation_1qoer")
+}
+
+[node name="Ability" instance=ExtResource("1_co5u4")]
+
+[node name="CollisionShape3D" parent="Area3D" index="0"]
+shape = SubResource("ConvexPolygonShape3D_qlpf5")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="2"]
+libraries = {
+"": SubResource("AnimationLibrary_ckwqy")
+}

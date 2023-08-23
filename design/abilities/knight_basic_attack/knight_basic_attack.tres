@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="KnightBasicAttack" load_steps=3 format=3 uid="uid://xvig5656ekn1"]
+
+[ext_resource type="Texture2D" uid="uid://lat7ahrw014r" path="res://assets/icon.svg" id="1_3div1"]
+[ext_resource type="Script" path="res://design/abilities/knight_basic_attack/knight_basic_attack.gd" id="1_c8go2"]
+
+[resource]
+script = ExtResource("1_c8go2")
+damage = 20.0
+name = "Knight Basic Attack"
+icon = ExtResource("1_3div1")
+target_mode = 2
+circle_radius = 0.0
+arc_range = 2.0
+arc_width = 60.0
+line_width = 0.0
+is_projectile = false
+projectile_speed = 0.0
+max_travel_distance = 0.0
+piercing = false

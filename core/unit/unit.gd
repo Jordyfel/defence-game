@@ -121,7 +121,8 @@ func _on_velocity_computed(safe_velocity: Vector3) -> void:
 
 
 func _on_navigation_agent_3d_navigation_finished() -> void:
-	animation_player.play(&"idle")
+	if cast_lock_timer.is_stopped():
+		animation_player.play(&"idle")
 
 
 func request_target(ability_key: String, show_indicators:= true) -> void:
@@ -139,9 +140,9 @@ func request_target(ability_key: String, show_indicators:= true) -> void:
 func activate_ability(ability_index: String, target: Variant) -> void:
 	var ability: UnitAbility = abilities[ability_index]
 	assert(target is Vector3 or target is NodePath or target == null)
-	assert(not ability.is_on_cooldown)
+	#assert(not ability.is_on_cooldown)
 	if ability.is_on_cooldown:
-		return # Shouldn't happen, but it does, so avoid casting twice until it's fixed.
+		return # Shouldn't happen, but it does, so avoid until it's fixed.
 	
 	if target is NodePath:
 		target = get_node(target)
@@ -150,10 +151,13 @@ func activate_ability(ability_index: String, target: Variant) -> void:
 		command_stop()
 		return
 	
+	var target_position:= Vector3()
+	if target:
+		target_position = target if target is Vector3 else target.global_position
+	
 	if ability.data.target_mode == AbilityData.TargetMode.POSITION or \
 			ability.data.target_mode == AbilityData.TargetMode.DETACHED_CIRCLE or \
 			ability.data.target_mode == AbilityData.TargetMode.UNIT:
-		var target_position = target if target is Vector3 else target.global_position
 		if global_position.distance_to(target_position) > ability.cast_range:
 			return
 	
@@ -163,15 +167,13 @@ func activate_ability(ability_index: String, target: Variant) -> void:
 		if result["source"] == override_queued_command:
 			return
 	
-	_start_casting_ability.rpc(ability_index)
+	var prevent_movement:= not is_zero_approx(ability.cast_time)
+	var look_at_target:= target != null
+	_start_casting_ability.rpc(ability_index, prevent_movement, look_at_target, target_position)
 	
-	if not is_zero_approx(ability.cast_time):
-#		var prev_move_target_position = navigation_agent.get_target_position()
-		command_stop()
-		look_at(target if target is Vector3 else target.global_position, Vector3.UP, true)
-		cast_lock_timer.start(ability.cast_time)
-#		command_move(prev_move_target_position)
-		await cast_lock_timer.timeout
+	if prevent_movement:
+		cast_lock_timer.start(animation_player.get_animation("ability_" + ability_index).length)
+		await get_tree().create_timer(ability.cast_time).timeout
 	
 	var ability_scene: AbilityScene = ability.ability_scene.instantiate()
 	ability_scene.effect_time_reached.connect(_affect_unit.bind(ability, ability_scene))
@@ -194,7 +196,14 @@ func activate_ability(ability_index: String, target: Variant) -> void:
 
 
 @rpc("call_local", "reliable")
-func _start_casting_ability(ability_index: String) -> void:
+func _start_casting_ability(ability_index: String, stop_moving: bool,
+		look_at_target: bool, target_position: Vector3) -> void:
+	
+	if stop_moving:
+		navigation_agent.set_target_position(global_position)
+		if look_at_target:
+			look_at(target_position, Vector3.UP, true)
+	
 	var ability = abilities[ability_index]
 	ability_cooldown_started.emit(abilities.find_key(ability), ability.base_cooldown)
 	ability.cooldown_remaining = ability.base_cooldown

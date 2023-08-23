@@ -6,7 +6,7 @@ signal floor_clicked(click_position: Vector3)
 signal unit_clicked(unit: Unit)
 signal cancel
 
-var targeting:= false # Should be temp.
+var targeting:= false
 var mouse_position_on_floor: Vector3
 
 
@@ -18,14 +18,14 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel"):
+	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("unit_move"):
 		cancel.emit()
 
 
 # Called only on the server.
 func start_game() -> void:
 	for i in 1:
-		var new_unit: Unit = load("res://design/units/kitty.tscn").instantiate()
+		var new_unit: Unit = load("res://design/units/knight.tscn").instantiate()
 		new_unit.position = $UnitSpawn.position
 		new_unit.ask_player_for_target.connect(_on_ask_player_for_target)
 		new_unit.input_event.connect(_on_unit_input.bind(new_unit))
@@ -118,6 +118,3 @@ func move_unit(target_position: Vector3) -> void:
 		if unit is Unit:
 			if unit.team == &"enemy":
 				unit.command_move.rpc_id(1, target_position)
-	
-	#$Unit.command_move.rpc(target_position)
-	#$Unit.command_move(target_position)

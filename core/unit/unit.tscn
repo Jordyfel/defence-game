@@ -72,7 +72,7 @@ size = Vector2i(204, 16)
 script = ExtResource("5_2kgje")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
-path_desired_distance = 2.0
+path_height_offset = 0.5
 avoidance_enabled = true
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]

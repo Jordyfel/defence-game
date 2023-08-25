@@ -141,6 +141,7 @@ display_perf_metrics={
 3d_physics/layer_1="floor"
 3d_physics/layer_2="units"
 3d_physics/layer_3="projectiles"
+3d_physics/layer_4="unit_range"
 avoidance/layer_1="player"
 avoidance/layer_2="enemy"
 

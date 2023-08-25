@@ -45,7 +45,7 @@ projectile_speed = 0.0
 max_travel_distance = 0.0
 piercing = false
 
-[sub_resource type="Resource" id="Resource_mf1mp"]
+[sub_resource type="Resource" id="Resource_wvo17"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 0.0
@@ -70,7 +70,6 @@ transform = Transform3D(1, 0, 0, 0, -0.64643, 0.762973, 0, -0.762973, -0.64643, 
 shadow_enabled = true
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
-visible = false
 navigation_mesh = ExtResource("3_28tux")
 
 [node name="Floor" type="StaticBody3D" parent="."]
@@ -229,9 +228,16 @@ text = "V"
 [node name="UnitSpawn" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.196)
 
+[node name="EnemySpawn" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15.9988)
+
+[node name="EnemyDestination" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.00495)
+
 [node name="Barbarian" parent="." instance=ExtResource("9_abf5k")]
-transform = Transform3D(0.703891, 0, 0.710308, 0, 1, 0, -0.710308, 0, 0.703891, 0, 0, -12.598)
-ability_s = SubResource("Resource_mf1mp")
+transform = Transform3D(0.703891, 0, 0.710308, 0, 1, 0, -0.710308, 0, 0.703891, 6.76469, 0, -5.93283)
+team = &"enemy"
+ability_s = SubResource("Resource_wvo17")
 
 [editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonQ"]
 [editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonW"]

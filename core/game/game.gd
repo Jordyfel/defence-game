@@ -9,16 +9,22 @@ signal cancel
 var targeting:= false
 var mouse_position_on_floor: Vector3
 
+var enemy_controller: EnemyController
+
 
 
 func _ready() -> void:
 	$Floor.input_event.connect(_on_floor_input)
 	
+	if multiplayer.is_server():
+		enemy_controller = EnemyController.new()
+		enemy_controller.enemy_destination = $EnemyDestination.position
+	
 	Lobby.player_loaded.rpc_id(1)
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("unit_move"):
+	if event.is_action_pressed(&"ui_cancel") or event.is_action_pressed(&"unit_move"):
 		cancel.emit()
 
 
@@ -28,12 +34,21 @@ func start_game() -> void:
 		var new_unit: Unit = load("res://design/units/knight.tscn").instantiate()
 		new_unit.position = $UnitSpawn.position
 		new_unit.ask_player_for_target.connect(_on_ask_player_for_target)
-		new_unit.input_event.connect(_on_unit_input.bind(new_unit))
-		$Barbarian.input_event.connect(_on_unit_input.bind($Barbarian))
+		new_unit.input_event.connect(_on_unit_input.bind(new_unit)) # to remove
+		$Barbarian.input_event.connect(_on_unit_input.bind($Barbarian)) # to remove
 		add_child(new_unit, true)
 		%BottomBar.connect_to_unit(new_unit)
-		new_unit.get_node(^"NavigationAgent3D").avoidance_layers = 1
-		new_unit.get_node(^"NavigationAgent3D").avoidance_mask = 1
+	
+	spawn_enemy("res://design/units/kitty.tscn")
+
+
+#probably temp
+func spawn_enemy(scene_path: String) -> void:
+	var new_unit: Unit = load(scene_path).instantiate()
+	new_unit.position = $EnemySpawn.position
+	new_unit.input_event.connect(_on_unit_input.bind(new_unit)) #to remove
+	add_child(new_unit, true)
+	enemy_controller.add_unit(new_unit)
 
 
 func _on_ask_player_for_target(source_unit: Unit, ability_index: String, show_indicators: bool) -> void:
@@ -114,7 +129,6 @@ func _on_unit_input(_camera: Node, event: InputEvent, _event_position: Vector3,_
 
 @rpc("any_peer", "call_local", "reliable")
 func move_unit(target_position: Vector3) -> void:
-	for unit in get_children():
-		if unit is Unit:
-			if unit.team == &"enemy":
-				unit.command_move.rpc_id(1, target_position)
+	for unit in get_children().filter(func(node): return node is Unit):
+		if unit.team == &"player":
+			unit.command_move.rpc_id(1, target_position)

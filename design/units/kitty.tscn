@@ -229,8 +229,6 @@ texture = SubResource("ViewportTexture_0vr84")
 [node name="NavigationAgent3D" parent="." index="3"]
 height = 0.5
 radius = 0.4
-avoidance_layers = 2
-avoidance_mask = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="6"]
 libraries = {

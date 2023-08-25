@@ -172,7 +172,6 @@ func activate_ability(ability_index: String, target: Variant) -> void:
 	_start_casting_ability.rpc(ability_index, prevent_movement, look_at_target, target_position)
 	
 	if prevent_movement:
-		cast_lock_timer.start(animation_player.get_animation("ability_" + ability_index).length)
 		await get_tree().create_timer(ability.cast_time).timeout
 	
 	var ability_scene: AbilityScene = ability.ability_scene.instantiate()
@@ -199,8 +198,10 @@ func activate_ability(ability_index: String, target: Variant) -> void:
 func _start_casting_ability(ability_index: String, stop_moving: bool,
 		look_at_target: bool, target_position: Vector3) -> void:
 	
+	var animation_name = "ability_" + ability_index
 	if stop_moving:
 		navigation_agent.set_target_position(global_position)
+		cast_lock_timer.start(animation_player.get_animation(animation_name).length)
 		if look_at_target:
 			look_at(target_position, Vector3.UP, true)
 	
@@ -209,7 +210,6 @@ func _start_casting_ability(ability_index: String, stop_moving: bool,
 	ability.cooldown_remaining = ability.base_cooldown
 	ability.is_on_cooldown = true
 	
-	var animation_name = "ability_" + ability_index
 	assert(animation_player.has_animation(animation_name))
 	animation_player.play(animation_name)
 

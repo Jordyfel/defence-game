@@ -140,9 +140,9 @@ func request_target(ability_key: String, show_indicators:= true) -> void:
 func activate_ability(ability_index: String, target: Variant) -> void:
 	var ability: UnitAbility = abilities[ability_index]
 	assert(target is Vector3 or target is NodePath or target == null)
-	#assert(not ability.is_on_cooldown)
-	if ability.is_on_cooldown:
-		return # Shouldn't happen, but it does, so avoid until it's fixed.
+	assert(not ability.is_on_cooldown)
+#	if ability.is_on_cooldown:
+#		return # Shouldn't happen, but it does, so avoid until it's fixed.
 	
 	if target is NodePath:
 		target = get_node(target)
@@ -151,15 +151,20 @@ func activate_ability(ability_index: String, target: Variant) -> void:
 		command_stop()
 		return
 	
-	var target_position:= Vector3()
-	if target:
-		target_position = target if target is Vector3 else target.global_position
-	
 	if ability.data.target_mode == AbilityData.TargetMode.POSITION or \
-			ability.data.target_mode == AbilityData.TargetMode.DETACHED_CIRCLE or \
-			ability.data.target_mode == AbilityData.TargetMode.UNIT:
-		if global_position.distance_to(target_position) > ability.cast_range:
-			return
+			ability.data.target_mode == AbilityData.TargetMode.DETACHED_CIRCLE:
+		assert(target is Vector3)
+		if global_position.distance_to(target) > ability.cast_range:
+			var is_target_reached = await _move_in_range_of_position(target, ability.cast_range)
+			if not is_target_reached:
+				return
+	
+	if ability.data.target_mode == AbilityData.TargetMode.UNIT:
+		assert(target is Unit)
+		if global_position.distance_to(target.global_position) > ability.cast_range:
+			var is_target_reached = await _move_in_range_of_unit(target, ability.cast_range)
+			if not is_target_reached:
+				return
 	
 	if not cast_lock_timer.is_stopped():
 		var signals = SignalCombiner.new([cast_lock_timer.timeout, override_queued_command])
@@ -169,7 +174,7 @@ func activate_ability(ability_index: String, target: Variant) -> void:
 	
 	var prevent_movement:= not is_zero_approx(ability.cast_time)
 	var look_at_target:= target != null
-	_start_casting_ability.rpc(ability_index, prevent_movement, look_at_target, target_position)
+	_start_casting_ability.rpc(ability_index, prevent_movement, look_at_target, target)
 	
 	if prevent_movement:
 		await get_tree().create_timer(ability.cast_time).timeout
@@ -196,13 +201,15 @@ func activate_ability(ability_index: String, target: Variant) -> void:
 
 @rpc("call_local", "reliable")
 func _start_casting_ability(ability_index: String, stop_moving: bool,
-		look_at_target: bool, target_position: Vector3) -> void:
+		look_at_target: bool, target) -> void:
 	
 	var animation_name = "ability_" + ability_index
 	if stop_moving:
 		navigation_agent.set_target_position(global_position)
 		cast_lock_timer.start(animation_player.get_animation(animation_name).length)
 		if look_at_target:
+			assert(target != null)
+			var target_position = target if target is Vector3 else target.global_position
 			look_at(target_position, Vector3.UP, true)
 	
 	var ability = abilities[ability_index]
@@ -212,6 +219,50 @@ func _start_casting_ability(ability_index: String, stop_moving: bool,
 	
 	assert(animation_player.has_animation(animation_name))
 	animation_player.play(animation_name)
+
+
+func _move_in_range_of_position(target_position: Vector3, distance: float) -> bool:
+	_move.rpc(target_position)
+	while global_position.distance_to(target_position) > distance:
+		var signals = SignalCombiner.new([get_tree().physics_frame, override_queued_command])
+		var result = await signals.completed_any
+		if result["source"] == override_queued_command:
+			return false
+	
+	return true
+
+
+func _move_in_range_of_unit(target_unit: Unit, distance: float) -> bool:
+	var range_area:= Area3D.new()
+	range_area.input_ray_pickable = false
+	range_area.collision_layer = 0b1000
+	range_area.collision_mask = 0b10
+	range_area.name = "RangeArea"
+	var collision_shape:= CollisionShape3D.new()
+	var sphere_shape:= SphereShape3D.new()
+	sphere_shape.radius = distance
+	collision_shape.shape = sphere_shape
+	add_child(range_area)
+	range_area.add_child(collision_shape)
+	
+	var last_unit_to_enter_range: Unit
+	_move.rpc(target_unit.global_position)
+	var last_target_position:= target_unit.global_position
+	while last_unit_to_enter_range != target_unit:
+		if not target_unit.global_position.is_equal_approx(last_target_position):
+			_move.rpc(target_unit.global_position)
+		var signals = SignalCombiner.new([range_area.body_entered,
+										get_tree().physics_frame,
+										override_queued_command])
+		var result = await signals.completed_any
+		if result["source"] == override_queued_command:
+			range_area.queue_free()
+			return false
+		elif result["source"] == range_area.body_entered:
+			last_unit_to_enter_range = result["data"]
+	
+	range_area.queue_free()
+	return true
 
 
 func _affect_unit(unit: Unit, ability: UnitAbility, ability_scene: AbilityScene) -> void:

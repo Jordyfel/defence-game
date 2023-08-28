@@ -31,7 +31,8 @@ func _unhandled_input(event: InputEvent) -> void:
 # Called only on the server.
 func start_game() -> void:
 	for i in 1:
-		var new_unit: Unit = load("res://design/units/knight.tscn").instantiate()
+		var new_unit: Unit = load("res://design/units/kitty.tscn").instantiate()
+		new_unit.team = &"player"
 		new_unit.position = $UnitSpawn.position
 		new_unit.ask_player_for_target.connect(_on_ask_player_for_target)
 		new_unit.input_event.connect(_on_unit_input.bind(new_unit)) # to remove

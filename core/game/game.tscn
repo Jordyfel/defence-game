@@ -45,7 +45,7 @@ projectile_speed = 0.0
 max_travel_distance = 0.0
 piercing = false
 
-[sub_resource type="Resource" id="Resource_21sqo"]
+[sub_resource type="Resource" id="Resource_o6j52"]
 resource_local_to_scene = true
 script = ExtResource("11_v0lcq")
 base_cooldown = 0.0
@@ -238,7 +238,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.00495)
 [node name="Barbarian" parent="." instance=ExtResource("9_abf5k")]
 transform = Transform3D(0.703891, 0, 0.710308, 0, 1, 0, -0.710308, 0, 0.703891, 6.76469, 0, -5.93283)
 team = &"enemy"
-ability_s = SubResource("Resource_21sqo")
+ability_s = SubResource("Resource_o6j52")
 
 [editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonQ"]
 [editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonW"]

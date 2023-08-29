@@ -5,7 +5,7 @@ extends CharacterBody3D
 
 signal ask_player_for_target(unit: Unit, ability: UnitAbility)
 signal ability_cooldown_started(ability_key: String, cooldown_duration: float)
-signal override_queued_command
+signal queue_command
 
 @export var unit_name: String
 @export var team: StringName
@@ -58,11 +58,11 @@ func _ready() -> void:
 
 @rpc("any_peer", "call_local", "reliable")
 func command_move(target_position: Vector3) -> void:
-	override_queued_command.emit()
+	queue_command.emit()
 	if not cast_lock_timer.is_stopped():
-		var signals = SignalCombiner.new([cast_lock_timer.timeout, override_queued_command])
+		var signals = SignalCombiner.new([cast_lock_timer.timeout, queue_command])
 		var result = await signals.completed_any
-		if result["source"] == override_queued_command:
+		if result["source"] == queue_command:
 			return
 	
 	_move.rpc(target_position)
@@ -77,11 +77,11 @@ func _move(target_position: Vector3) -> void:
 
 @rpc("any_peer", "call_local", "reliable")
 func command_stop() -> void:
-	override_queued_command.emit()
+	queue_command.emit()
 	if not cast_lock_timer.is_stopped():
-		var signals = SignalCombiner.new([cast_lock_timer.timeout, override_queued_command])
+		var signals = SignalCombiner.new([cast_lock_timer.timeout, queue_command])
 		var result = await signals.completed_any
-		if result["source"] == override_queued_command:
+		if result["source"] == queue_command:
 			return
 	
 	_stop.rpc()
@@ -141,8 +141,6 @@ func activate_ability(ability_index: String, target: Variant) -> void:
 	var ability: UnitAbility = abilities[ability_index]
 	assert(target is Vector3 or target is NodePath or target == null)
 	assert(not ability.is_on_cooldown)
-#	if ability.is_on_cooldown:
-#		return # Shouldn't happen, but it does, so avoid until it's fixed.
 	
 	if target is NodePath:
 		target = get_node(target)
@@ -167,9 +165,9 @@ func activate_ability(ability_index: String, target: Variant) -> void:
 				return
 	
 	if not cast_lock_timer.is_stopped():
-		var signals = SignalCombiner.new([cast_lock_timer.timeout, override_queued_command])
+		var signals = SignalCombiner.new([cast_lock_timer.timeout, queue_command])
 		var result = await signals.completed_any
-		if result["source"] == override_queued_command:
+		if result["source"] == queue_command:
 			return
 	
 	var prevent_movement:= not is_zero_approx(ability.cast_time)
@@ -224,9 +222,9 @@ func _start_casting_ability(ability_index: String, stop_moving: bool,
 func _move_in_range_of_position(target_position: Vector3, distance: float) -> bool:
 	_move.rpc(target_position)
 	while global_position.distance_to(target_position) > distance:
-		var signals = SignalCombiner.new([get_tree().physics_frame, override_queued_command])
+		var signals = SignalCombiner.new([get_tree().physics_frame, queue_command])
 		var result = await signals.completed_any
-		if result["source"] == override_queued_command:
+		if result["source"] == queue_command:
 			return false
 	
 	return true
@@ -248,14 +246,15 @@ func _move_in_range_of_unit(target_unit: Unit, distance: float) -> bool:
 	var last_unit_to_enter_range: Unit
 	_move.rpc(target_unit.global_position)
 	var last_target_position:= target_unit.global_position
+	
 	while last_unit_to_enter_range != target_unit:
 		if not target_unit.global_position.is_equal_approx(last_target_position):
 			_move.rpc(target_unit.global_position)
-		var signals = SignalCombiner.new([range_area.body_entered,
-										get_tree().physics_frame,
-										override_queued_command])
+		
+		var signals = SignalCombiner.new(
+				[range_area.body_entered, get_tree().physics_frame, queue_command])
 		var result = await signals.completed_any
-		if result["source"] == override_queued_command:
+		if result["source"] == queue_command:
 			range_area.queue_free()
 			return false
 		elif result["source"] == range_area.body_entered:

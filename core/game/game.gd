@@ -18,7 +18,6 @@ func _ready() -> void:
 	
 	if multiplayer.is_server():
 		enemy_controller = EnemyController.new()
-		enemy_controller.enemy_destination = $EnemyDestination.position
 	
 	Lobby.player_loaded.rpc_id(1)
 
@@ -49,7 +48,8 @@ func spawn_enemy(scene_path: String) -> void:
 	new_unit.position = $EnemySpawn.position
 	new_unit.input_event.connect(_on_unit_input.bind(new_unit)) #to remove
 	add_child(new_unit, true)
-	enemy_controller.add_unit(new_unit)
+	await get_tree().physics_frame
+	new_unit.command_attack_move($EnemyDestination.position)
 
 
 func _on_ask_player_for_target(source_unit: Unit, ability_index: String, show_indicators: bool) -> void:

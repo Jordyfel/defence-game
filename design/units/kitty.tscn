@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://bvl5x7v8tekda"]
+[gd_scene load_steps=31 format=3 uid="uid://bvl5x7v8tekda"]
 
 [ext_resource type="PackedScene" uid="uid://db7ry8dwek5ww" path="res://core/unit/unit.tscn" id="1_pyx1o"]
 [ext_resource type="PackedScene" uid="uid://rj7r3kdmajee" path="res://assets/character_models/kitty.glb" id="2_xewvb"]
@@ -84,6 +84,8 @@ data = SubResource("Resource_uy0gr")
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_sgelo"]
 radius = 0.4
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_klkv0"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_0vr84"]
 viewport_path = NodePath("HealthBar/SubViewport")
@@ -223,10 +225,13 @@ bones/7/rotation = Quaternion(0.682068, -0.731138, 0.00803397, 0.0125091)
 bones/9/rotation = Quaternion(0.0199471, -0.00173057, 0.662293, 0.748978)
 bones/11/rotation = Quaternion(0.662269, -0.748981, 0.0206426, 0.000943979)
 
-[node name="HealthBar" parent="." index="2"]
+[node name="CollisionShape3D" parent="RangeArea" index="0"]
+shape = SubResource("SphereShape3D_klkv0")
+
+[node name="HealthBar" parent="." index="3"]
 texture = SubResource("ViewportTexture_0vr84")
 
-[node name="NavigationAgent3D" parent="." index="3"]
+[node name="NavigationAgent3D" parent="." index="4"]
 height = 0.5
 radius = 0.4
 

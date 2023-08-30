@@ -13,3 +13,16 @@ extends Resource
 
 var cooldown_remaining: float
 var is_on_cooldown:= false
+
+
+
+func get_autocast_max_range() -> float:
+	match data.target_mode:
+		AbilityData.TargetMode.ATTACHED_ARC:
+			# Casting melee attack from max range would be too easy to dodge.
+			return data.arc_range - 0.5
+		AbilityData.TargetMode.NONE:
+			assert(false, "?")
+			return cast_range
+		_:
+			return cast_range

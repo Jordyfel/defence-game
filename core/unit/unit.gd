@@ -11,6 +11,7 @@ signal queue_command
 @export var team: StringName
 @export var movement_speed:= 4.0
 @export var max_health:= 100.0
+@export var aggro_range:= 10.0
 
 # I wish I could just export a dictionary, but this makes for the
 # best editing experience in the inspector.
@@ -42,6 +43,8 @@ var health: float:
 @onready var navigation_agent:= $NavigationAgent3D
 @onready var animation_player:= $AnimationPlayer
 @onready var cast_lock_timer:= $CastAnimationLockTimer
+@onready var range_area: Area3D = $RangeArea
+@onready var range_sphere: SphereShape3D = $RangeArea/CollisionShape3D.shape
 
 # For faster iteration.
 var _valid_abilities: Array[UnitAbility] = []
@@ -66,6 +69,62 @@ func command_move(target_position: Vector3) -> void:
 			return
 	
 	_move.rpc(target_position)
+
+
+@rpc("any_peer", "call_local", "reliable")
+func command_attack_move(target_position: Vector3) -> void:
+	queue_command.emit()
+	if not cast_lock_timer.is_stopped():
+		var signals = SignalCombiner.new([cast_lock_timer.timeout, queue_command])
+		var result = await signals.completed_any
+		if result["source"] == queue_command:
+			return
+	
+	range_sphere.radius = aggro_range
+	
+	while true:
+		var units_in_range: Array[Node3D] = range_area.get_overlapping_bodies().filter(
+				func(unit: Unit) -> bool: return ability_a.data.is_valid_target(self, unit))
+		var targeted_unit: Unit
+		if not units_in_range.is_empty():
+			targeted_unit = units_in_range.reduce(
+					func(prev_closest_unit: Unit, curr_unit: Unit) -> Unit:
+						var is_closer:= curr_unit.global_position.distance_to(global_position) < \
+								prev_closest_unit.global_position.distance_to(global_position)
+						return curr_unit if is_closer else prev_closest_unit)
+		else:
+			_move.rpc(target_position)
+			while true:
+				var signals = SignalCombiner.new([range_area.body_entered, queue_command])
+				var result = await signals.completed_any
+				if result["source"] == queue_command:
+					return
+				elif result["source"] == range_area.body_entered:
+					if ability_a.data.is_valid_target(self, result["data"]):
+						targeted_unit = result["data"]
+						break
+		
+		var desired_distance = ability_a.get_autocast_max_range()
+		var is_target_reached = await _move_in_range_of_unit(targeted_unit, desired_distance)
+		if not is_target_reached:
+			return
+		range_sphere.radius = aggro_range
+		
+		while ability_a.is_on_cooldown:
+			await get_tree().physics_frame
+			if global_position.distance_to(targeted_unit.global_position) > desired_distance:
+				is_target_reached = await _move_in_range_of_unit(targeted_unit, desired_distance)
+				if not is_target_reached:
+					return
+				range_sphere.radius = aggro_range
+		
+		activate_ability("a", targeted_unit.get_path())
+		var signals = SignalCombiner.new([cast_lock_timer.timeout, queue_command])
+		var result = await signals.completed_any
+		if result["source"] == queue_command:
+			return
+	
+	print("Exited attack move loop.")
 
 
 @rpc("call_local", "reliable")
@@ -231,18 +290,10 @@ func _move_in_range_of_position(target_position: Vector3, distance: float) -> bo
 
 
 func _move_in_range_of_unit(target_unit: Unit, distance: float) -> bool:
-	var range_area:= Area3D.new()
-	range_area.input_ray_pickable = false
-	range_area.collision_layer = 0b1000
-	range_area.collision_mask = 0b10
-	range_area.name = "RangeArea"
-	var collision_shape:= CollisionShape3D.new()
-	var sphere_shape:= SphereShape3D.new()
-	sphere_shape.radius = distance
-	collision_shape.shape = sphere_shape
-	add_child(range_area)
-	range_area.add_child(collision_shape)
-	
+	range_sphere.radius = distance
+	await get_tree().physics_frame
+	if range_area.get_overlapping_bodies().has(target_unit):
+		return true
 	var last_unit_to_enter_range: Unit
 	_move.rpc(target_unit.global_position)
 	var last_target_position:= target_unit.global_position
@@ -255,12 +306,10 @@ func _move_in_range_of_unit(target_unit: Unit, distance: float) -> bool:
 				[range_area.body_entered, get_tree().physics_frame, queue_command])
 		var result = await signals.completed_any
 		if result["source"] == queue_command:
-			range_area.queue_free()
 			return false
 		elif result["source"] == range_area.body_entered:
 			last_unit_to_enter_range = result["data"]
 	
-	range_area.queue_free()
 	return true
 
 

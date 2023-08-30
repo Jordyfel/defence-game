@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bmgabk4do4bx8"]
+[gd_scene load_steps=13 format=3 uid="uid://bmgabk4do4bx8"]
 
 [ext_resource type="PackedScene" uid="uid://db7ry8dwek5ww" path="res://core/unit/unit.tscn" id="1_1yxtd"]
 [ext_resource type="Texture2D" uid="uid://lat7ahrw014r" path="res://assets/icon.svg" id="2_pul2k"]
@@ -34,6 +34,8 @@ data = SubResource("Resource_uy0gr")
 radius = 0.7
 height = 2.5
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_7rrcm"]
+
 [sub_resource type="ViewportTexture" id="ViewportTexture_pa47n"]
 viewport_path = NodePath("HealthBar/SubViewport")
 
@@ -65,7 +67,10 @@ ability_s = SubResource("Resource_773yr")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
 shape = SubResource("CapsuleShape3D_equ16")
 
-[node name="HealthBar" parent="." index="1"]
+[node name="CollisionShape3D" parent="RangeArea" index="0"]
+shape = SubResource("SphereShape3D_7rrcm")
+
+[node name="HealthBar" parent="." index="2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.81277, 0)
 texture = SubResource("ViewportTexture_pa47n")
 

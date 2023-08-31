@@ -49,7 +49,7 @@ func spawn_enemy(scene_path: String) -> void:
 	new_unit.input_event.connect(_on_unit_input.bind(new_unit)) #to remove
 	add_child(new_unit, true)
 	await get_tree().physics_frame
-	new_unit.command_attack_move($EnemyDestination.position)
+	#new_unit.command_attack_move($EnemyDestination.position)
 
 
 func _on_ask_player_for_target(source_unit: Unit, ability_index: String, show_indicators: bool) -> void:
@@ -116,6 +116,9 @@ func _on_floor_input(_camera: Node, event: InputEvent, event_position: Vector3,_
 	
 	if event.is_action_pressed(&"left_click_temp"):
 		floor_clicked.emit(event_position)
+	
+	if event.is_action_pressed(&"attack_move_temp"):
+		attack_move_unit.rpc_id(1, event_position)
 
 
 func _on_unit_input(_camera: Node, event: InputEvent, _event_position: Vector3,_normal: Vector3,
@@ -133,3 +136,10 @@ func move_unit(target_position: Vector3) -> void:
 	for unit in get_children().filter(func(node): return node is Unit):
 		if unit.team == &"player":
 			unit.command_move.rpc_id(1, target_position)
+
+
+@rpc("any_peer", "call_local", "reliable")
+func attack_move_unit(target_position: Vector3) -> void:
+	for unit in get_children().filter(func(node): return node is Unit):
+		if unit.team == &"player":
+			unit.command_attack_move.rpc_id(1, target_position)

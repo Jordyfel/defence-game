@@ -1,7 +1,15 @@
 class_name Unit
 extends CharacterBody3D
 
+# List of TODOs:
 
+# Figure out when to create RangeArea and DetectionArea, having them both on
+# all of the time is not ideal.
+
+# Make units not ray pickable and figure unit selection out some other way.
+
+# Find a way to reuse SignalCombiner objects when awaiting the same signals
+# every frame.
 
 signal ask_player_for_target(unit: Unit, ability: UnitAbility)
 signal ability_cooldown_started(ability_key: String, cooldown_duration: float)
@@ -43,6 +51,8 @@ var health: float:
 @onready var navigation_agent:= $NavigationAgent3D
 @onready var animation_player:= $AnimationPlayer
 @onready var cast_lock_timer:= $CastAnimationLockTimer
+@onready var detection_area: Area3D = $DetectionArea
+@onready var detection_sphere: SphereShape3D = $DetectionArea/CollisionShape3D.shape
 @onready var range_area: Area3D = $RangeArea
 @onready var range_sphere: SphereShape3D = $RangeArea/CollisionShape3D.shape
 
@@ -54,6 +64,8 @@ var _valid_abilities: Array[UnitAbility] = []
 func _ready() -> void:
 	_fill_abilities()
 	navigation_agent.velocity_computed.connect(_on_velocity_computed)
+	if multiplayer.is_server():
+		detection_sphere.radius = aggro_range
 	
 	health = max_health
 	animation_player.play(&"idle")
@@ -80,10 +92,8 @@ func command_attack_move(target_position: Vector3) -> void:
 		if result["source"] == queue_command:
 			return
 	
-	range_sphere.radius = aggro_range
-	
 	while true:
-		var units_in_range: Array[Node3D] = range_area.get_overlapping_bodies().filter(
+		var units_in_range: Array[Node3D] = detection_area.get_overlapping_bodies().filter(
 				func(unit: Unit) -> bool: return ability_a.data.is_valid_target(self, unit))
 		var targeted_unit: Unit
 		if not units_in_range.is_empty():
@@ -95,11 +105,11 @@ func command_attack_move(target_position: Vector3) -> void:
 		else:
 			_move.rpc(target_position)
 			while true:
-				var signals = SignalCombiner.new([range_area.body_entered, queue_command])
+				var signals = SignalCombiner.new([detection_area.body_entered, queue_command])
 				var result = await signals.completed_any
 				if result["source"] == queue_command:
 					return
-				elif result["source"] == range_area.body_entered:
+				elif result["source"] == detection_area.body_entered:
 					if ability_a.data.is_valid_target(self, result["data"]):
 						targeted_unit = result["data"]
 						break
@@ -108,23 +118,23 @@ func command_attack_move(target_position: Vector3) -> void:
 		var is_target_reached = await _move_in_range_of_unit(targeted_unit, desired_distance)
 		if not is_target_reached:
 			return
-		range_sphere.radius = aggro_range
 		
+		#TODO: This loop is really not optimized well.
 		while ability_a.is_on_cooldown:
-			await get_tree().physics_frame
+			var signals = SignalCombiner.new([get_tree().physics_frame, queue_command])
+			var result = await signals.completed_any
+			if result["source"] == queue_command:
+				return
 			if global_position.distance_to(targeted_unit.global_position) > desired_distance:
 				is_target_reached = await _move_in_range_of_unit(targeted_unit, desired_distance)
 				if not is_target_reached:
 					return
-				range_sphere.radius = aggro_range
 		
 		activate_ability("a", targeted_unit.get_path())
 		var signals = SignalCombiner.new([cast_lock_timer.timeout, queue_command])
 		var result = await signals.completed_any
 		if result["source"] == queue_command:
 			return
-	
-	print("Exited attack move loop.")
 
 
 @rpc("call_local", "reliable")
@@ -291,7 +301,7 @@ func _move_in_range_of_position(target_position: Vector3, distance: float) -> bo
 
 func _move_in_range_of_unit(target_unit: Unit, distance: float) -> bool:
 	range_sphere.radius = distance
-	await get_tree().physics_frame
+	await get_tree().physics_frame # Maybe create new object to avoid this
 	if range_area.get_overlapping_bodies().has(target_unit):
 		return true
 	var last_unit_to_enter_range: Unit

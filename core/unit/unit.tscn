@@ -51,6 +51,13 @@ ability_s = SubResource("Resource_6fqjh")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 
+[node name="DetectionArea" type="Area3D" parent="."]
+collision_layer = 8
+collision_mask = 2
+input_ray_pickable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DetectionArea"]
+
 [node name="RangeArea" type="Area3D" parent="."]
 collision_layer = 8
 collision_mask = 2

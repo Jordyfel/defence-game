@@ -1,10 +1,7 @@
 class_name Unit
 extends CharacterBody3D
 
-# List of TODOs:
-
-# Figure out when to create RangeArea and DetectionArea, having them both on
-# all of the time is not ideal.
+# TODO:
 
 # Make units not ray pickable and figure unit selection out some other way.
 
@@ -51,10 +48,6 @@ var health: float:
 @onready var navigation_agent:= $NavigationAgent3D
 @onready var animation_player:= $AnimationPlayer
 @onready var cast_lock_timer:= $CastAnimationLockTimer
-@onready var detection_area: Area3D = $DetectionArea
-@onready var detection_sphere: SphereShape3D = $DetectionArea/CollisionShape3D.shape
-@onready var range_area: Area3D = $RangeArea
-@onready var range_sphere: SphereShape3D = $RangeArea/CollisionShape3D.shape
 
 # For faster iteration.
 var _valid_abilities: Array[UnitAbility] = []
@@ -64,8 +57,6 @@ var _valid_abilities: Array[UnitAbility] = []
 func _ready() -> void:
 	_fill_abilities()
 	navigation_agent.velocity_computed.connect(_on_velocity_computed)
-	if multiplayer.is_server():
-		detection_sphere.radius = aggro_range
 	
 	health = max_health
 	animation_player.play(&"idle")
@@ -85,6 +76,13 @@ func command_move(target_position: Vector3) -> void:
 
 @rpc("any_peer", "call_local", "reliable")
 func command_attack_move(target_position: Vector3) -> void:
+	assert(aggro_range > ability_a.get_autocast_max_range(), "Case not handled in attack move.")
+	
+	var detection_area: Area3D = load("res://core/game/range_area.tscn").instantiate()
+	detection_area.name = "DetectionArea"
+	add_child(detection_area)
+	detection_area.get_node(^"CollisionShape3D").shape.radius = aggro_range
+	
 	queue_command.emit()
 	if not cast_lock_timer.is_stopped():
 		var signals = SignalCombiner.new([cast_lock_timer.timeout, queue_command])
@@ -300,8 +298,9 @@ func _move_in_range_of_position(target_position: Vector3, distance: float) -> bo
 
 
 func _move_in_range_of_unit(target_unit: Unit, distance: float) -> bool:
-	range_sphere.radius = distance
-	await get_tree().physics_frame # Maybe create new object to avoid this
+	var range_area: Area3D = load("res://core/game/range_area.tscn").instantiate()
+	add_child(range_area)
+	range_area.get_node(^"CollisionShape3D").shape.radius = distance
 	if range_area.get_overlapping_bodies().has(target_unit):
 		return true
 	var last_unit_to_enter_range: Unit
@@ -316,10 +315,12 @@ func _move_in_range_of_unit(target_unit: Unit, distance: float) -> bool:
 				[range_area.body_entered, get_tree().physics_frame, queue_command])
 		var result = await signals.completed_any
 		if result["source"] == queue_command:
+			range_area.queue_free()
 			return false
 		elif result["source"] == range_area.body_entered:
 			last_unit_to_enter_range = result["data"]
 	
+	range_area.queue_free()
 	return true
 
 

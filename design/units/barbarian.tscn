@@ -69,12 +69,6 @@ ability_s = SubResource("Resource_773yr")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
 shape = SubResource("CapsuleShape3D_equ16")
 
-[node name="CollisionShape3D" parent="DetectionArea" index="0"]
-shape = SubResource("SphereShape3D_ds7ui")
-
-[node name="CollisionShape3D" parent="RangeArea" index="0"]
-shape = SubResource("SphereShape3D_7rrcm")
-
 [node name="HealthBar" parent="." index="3"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.81277, 0)
 texture = SubResource("ViewportTexture_pa47n")

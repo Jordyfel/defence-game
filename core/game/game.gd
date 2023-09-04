@@ -49,7 +49,7 @@ func spawn_enemy(scene_path: String) -> void:
 	new_unit.input_event.connect(_on_unit_input.bind(new_unit)) #to remove
 	add_child(new_unit, true)
 	await get_tree().physics_frame
-	#new_unit.command_attack_move($EnemyDestination.position)
+	new_unit.command_attack_move($EnemyDestination.position)
 
 
 func _on_ask_player_for_target(source_unit: Unit, ability_index: String, show_indicators: bool) -> void:

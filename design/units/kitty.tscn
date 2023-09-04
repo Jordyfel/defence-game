@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://bvl5x7v8tekda"]
+[gd_scene load_steps=30 format=3 uid="uid://bvl5x7v8tekda"]
 
 [ext_resource type="PackedScene" uid="uid://db7ry8dwek5ww" path="res://core/unit/unit.tscn" id="1_pyx1o"]
 [ext_resource type="PackedScene" uid="uid://rj7r3kdmajee" path="res://assets/character_models/kitty.glb" id="2_xewvb"]
@@ -82,12 +82,8 @@ cast_time = 0.0
 is_castable_while_moving = false
 data = SubResource("Resource_uy0gr")
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_sgelo"]
-radius = 0.4
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_egst3"]
-
 [sub_resource type="SphereShape3D" id="SphereShape3D_klkv0"]
+radius = 0.4
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_0vr84"]
 viewport_path = NodePath("HealthBar/SubViewport")
@@ -215,11 +211,7 @@ ability_e = SubResource("Resource_h2hsc")
 ability_a = SubResource("Resource_i1yar")
 ability_s = SubResource("Resource_sbb5e")
 
-[node name="CollisionShape3D" parent="." index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
-shape = SubResource("SphereShape3D_sgelo")
-
-[node name="Model" parent="." index="1" instance=ExtResource("2_xewvb")]
+[node name="Model" parent="." index="0" instance=ExtResource("2_xewvb")]
 
 [node name="Skeleton3D" parent="Model/Armature" index="0"]
 bones/5/rotation = Quaternion(0.00806412, -0.0124769, 0.682071, 0.731135)
@@ -227,20 +219,18 @@ bones/7/rotation = Quaternion(0.682068, -0.731138, 0.00803397, 0.0125091)
 bones/9/rotation = Quaternion(0.0199471, -0.00173057, 0.662293, 0.748978)
 bones/11/rotation = Quaternion(0.662269, -0.748981, 0.0206426, 0.000943979)
 
-[node name="CollisionShape3D" parent="DetectionArea" index="0"]
-shape = SubResource("SphereShape3D_egst3")
-
-[node name="CollisionShape3D" parent="RangeArea" index="0"]
+[node name="CollisionShape3D" parent="." index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
 shape = SubResource("SphereShape3D_klkv0")
 
-[node name="HealthBar" parent="." index="4"]
+[node name="HealthBar" parent="." index="2"]
 texture = SubResource("ViewportTexture_0vr84")
 
-[node name="NavigationAgent3D" parent="." index="5"]
+[node name="NavigationAgent3D" parent="." index="3"]
 height = 0.5
 radius = 0.4
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="6"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="5"]
 libraries = {
 "": SubResource("AnimationLibrary_57sr2")
 }

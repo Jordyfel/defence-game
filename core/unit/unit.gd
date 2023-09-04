@@ -5,9 +5,6 @@ extends CharacterBody3D
 
 # Make the unit selection area slide while targeting and add target indicator on the unit.
 
-# Find a way to reuse SignalCombiner objects when awaiting the same signals
-# every frame.
-
 signal ask_player_for_target(unit: Unit, ability: UnitAbility)
 signal ability_cooldown_started(ability_key: String, cooldown_duration: float)
 signal queue_command
@@ -67,7 +64,7 @@ func command_move(target_position: Vector3) -> void:
 	queue_command.emit()
 	if not cast_lock_timer.is_stopped():
 		var signals = SignalCombiner.new([cast_lock_timer.timeout, queue_command])
-		var result = await signals.completed_any
+		var result = await signals.completed
 		if result["source"] == queue_command:
 			return
 	
@@ -81,7 +78,7 @@ func command_attack_move(target_position: Vector3) -> void:
 	queue_command.emit()
 	if not cast_lock_timer.is_stopped():
 		var signals = SignalCombiner.new([cast_lock_timer.timeout, queue_command])
-		var result = await signals.completed_any
+		var result = await signals.completed
 		if result["source"] == queue_command:
 			return
 	
@@ -104,7 +101,7 @@ func command_attack_move(target_position: Vector3) -> void:
 			_move.rpc(target_position)
 			while true:
 				var signals = SignalCombiner.new([detection_area.body_entered, queue_command])
-				var result = await signals.completed_any
+				var result = await signals.completed
 				if result["source"] == queue_command:
 					return
 				elif result["source"] == detection_area.body_entered:
@@ -117,20 +114,14 @@ func command_attack_move(target_position: Vector3) -> void:
 		if not is_target_reached:
 			return
 		
-		#TODO: This loop is really not optimized well.
 		while ability_a.is_on_cooldown:
-			var signals = SignalCombiner.new([get_tree().physics_frame, queue_command])
-			var result = await signals.completed_any
-			if result["source"] == queue_command:
+			is_target_reached = await _move_in_range_of_unit(targeted_unit, desired_distance)
+			if not is_target_reached:
 				return
-			if global_position.distance_to(targeted_unit.global_position) > desired_distance:
-				is_target_reached = await _move_in_range_of_unit(targeted_unit, desired_distance)
-				if not is_target_reached:
-					return
 		
 		activate_ability("a", targeted_unit.get_path())
 		var signals = SignalCombiner.new([cast_lock_timer.timeout, queue_command])
-		var result = await signals.completed_any
+		var result = await signals.completed
 		if result["source"] == queue_command:
 			return
 
@@ -147,7 +138,7 @@ func command_stop() -> void:
 	queue_command.emit()
 	if not cast_lock_timer.is_stopped():
 		var signals = SignalCombiner.new([cast_lock_timer.timeout, queue_command])
-		var result = await signals.completed_any
+		var result = await signals.completed
 		if result["source"] == queue_command:
 			return
 	
@@ -233,7 +224,7 @@ func activate_ability(ability_index: String, target: Variant) -> void:
 	
 	if not cast_lock_timer.is_stopped():
 		var signals = SignalCombiner.new([cast_lock_timer.timeout, queue_command])
-		var result = await signals.completed_any
+		var result = await signals.completed
 		if result["source"] == queue_command:
 			return
 	
@@ -288,9 +279,9 @@ func _start_casting_ability(ability_index: String, stop_moving: bool,
 
 func _move_in_range_of_position(target_position: Vector3, distance: float) -> bool:
 	_move.rpc(target_position)
+	var signals = SignalCombiner.new([get_tree().physics_frame, queue_command])
 	while global_position.distance_to(target_position) > distance:
-		var signals = SignalCombiner.new([get_tree().physics_frame, queue_command])
-		var result = await signals.completed_any
+		var result = await signals.completed
 		if result["source"] == queue_command:
 			return false
 	
@@ -301,20 +292,23 @@ func _move_in_range_of_unit(target_unit: Unit, distance: float) -> bool:
 	var range_area: Area3D = load("res://core/game/range_area.tscn").instantiate()
 	add_child(range_area)
 	range_area.get_node(^"CollisionShape3D").shape.radius = distance
-	await get_tree().physics_frame
+	var sig = SignalCombiner.new([get_tree().physics_frame, queue_command])
+	var res = await sig.completed
+	if res["source"] == queue_command:
+		return false
+	
 	if range_area.get_overlapping_bodies().has(target_unit):
 		return true
+	
 	var last_unit_to_enter_range: Unit
 	_move.rpc(target_unit.global_position)
 	var last_target_position:= target_unit.global_position
 	
+	var signals = SignalCombiner.new([range_area.body_entered, get_tree().physics_frame, queue_command])
 	while last_unit_to_enter_range != target_unit:
 		if not target_unit.global_position.is_equal_approx(last_target_position):
 			_move.rpc(target_unit.global_position)
-		
-		var signals = SignalCombiner.new(
-				[range_area.body_entered, get_tree().physics_frame, queue_command])
-		var result = await signals.completed_any
+		var result = await signals.completed
 		if result["source"] == queue_command:
 			range_area.queue_free()
 			return false

@@ -80,7 +80,7 @@ func _on_ask_player_for_target(source_unit: Unit, ability_index: String, show_in
 	
 	if ability.data.target_mode == AbilityData.TargetMode.UNIT:
 		var signals = SignalCombiner.new([floor_clicked, cancel])
-		var result = await signals.completed_any
+		var result = await signals.completed
 		if result["source"] == floor_clicked:
 			var detection_area: Area3D = load("res://core/game/range_area.tscn").instantiate()
 			detection_area.position = result["data"]
@@ -101,7 +101,7 @@ func _on_ask_player_for_target(source_unit: Unit, ability_index: String, show_in
 			detection_area.queue_free()
 	else:
 		var signals = SignalCombiner.new([floor_clicked, cancel])
-		var result = await signals.completed_any
+		var result = await signals.completed
 		match result["source"]:
 			floor_clicked:
 				target = result["data"]

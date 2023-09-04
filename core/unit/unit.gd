@@ -230,7 +230,8 @@ func activate_ability(ability_index: String, target: Variant) -> void:
 	
 	var prevent_movement:= not is_zero_approx(ability.cast_time)
 	var look_at_target:= target != null
-	_start_casting_ability.rpc(ability_index, prevent_movement, look_at_target, target)
+	var target_for_rpc = target if not target is Unit else target.get_path()
+	_start_casting_ability.rpc(ability_index, prevent_movement, look_at_target, target_for_rpc)
 	
 	if prevent_movement:
 		await get_tree().create_timer(ability.cast_time).timeout
@@ -265,7 +266,7 @@ func _start_casting_ability(ability_index: String, stop_moving: bool,
 		cast_lock_timer.start(animation_player.get_animation(animation_name).length)
 		if look_at_target:
 			assert(target != null)
-			var target_position = target if target is Vector3 else target.global_position
+			var target_position = target if target is Vector3 else get_node(target).global_position
 			look_at(target_position, Vector3.UP, true)
 	
 	var ability = abilities[ability_index]

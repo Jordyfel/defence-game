@@ -3,7 +3,7 @@ extends CharacterBody3D
 
 # TODO:
 
-# Make units not ray pickable and figure unit selection out some other way.
+# Make the unit selection area slide while targeting and add target indicator on the unit.
 
 # Find a way to reuse SignalCombiner objects when awaiting the same signals
 # every frame.
@@ -78,17 +78,17 @@ func command_move(target_position: Vector3) -> void:
 func command_attack_move(target_position: Vector3) -> void:
 	assert(aggro_range > ability_a.get_autocast_max_range(), "Case not handled in attack move.")
 	
-	var detection_area: Area3D = load("res://core/game/range_area.tscn").instantiate()
-	detection_area.name = "DetectionArea"
-	add_child(detection_area)
-	detection_area.get_node(^"CollisionShape3D").shape.radius = aggro_range
-	
 	queue_command.emit()
 	if not cast_lock_timer.is_stopped():
 		var signals = SignalCombiner.new([cast_lock_timer.timeout, queue_command])
 		var result = await signals.completed_any
 		if result["source"] == queue_command:
 			return
+	
+	var detection_area: Area3D = load("res://core/game/range_area.tscn").instantiate()
+	add_child(detection_area)
+	detection_area.get_node(^"CollisionShape3D").shape.radius = aggro_range
+	await get_tree().physics_frame
 	
 	while true:
 		var units_in_range: Array[Node3D] = detection_area.get_overlapping_bodies().filter(
@@ -301,6 +301,7 @@ func _move_in_range_of_unit(target_unit: Unit, distance: float) -> bool:
 	var range_area: Area3D = load("res://core/game/range_area.tscn").instantiate()
 	add_child(range_area)
 	range_area.get_node(^"CollisionShape3D").shape.radius = distance
+	await get_tree().physics_frame
 	if range_area.get_overlapping_bodies().has(target_unit):
 		return true
 	var last_unit_to_enter_range: Unit

@@ -3,8 +3,9 @@ extends Node3D
 
 
 signal floor_clicked(click_position: Vector3)
-signal unit_clicked(unit: Unit)
 signal cancel
+
+const UNIT_SELECTION_RANGE = 1.0
 
 var targeting:= false
 var mouse_position_on_floor: Vector3
@@ -34,8 +35,6 @@ func start_game() -> void:
 		new_unit.team = &"player"
 		new_unit.position = $UnitSpawn.position
 		new_unit.ask_player_for_target.connect(_on_ask_player_for_target)
-		new_unit.input_event.connect(_on_unit_input.bind(new_unit)) # to remove
-		$Barbarian.input_event.connect(_on_unit_input.bind($Barbarian)) # to remove
 		add_child(new_unit, true)
 		%BottomBar.connect_to_unit(new_unit)
 	
@@ -46,7 +45,6 @@ func start_game() -> void:
 func spawn_enemy(scene_path: String) -> void:
 	var new_unit: Unit = load(scene_path).instantiate()
 	new_unit.position = $EnemySpawn.position
-	new_unit.input_event.connect(_on_unit_input.bind(new_unit)) #to remove
 	add_child(new_unit, true)
 	await get_tree().physics_frame
 	new_unit.command_attack_move($EnemyDestination.position)
@@ -81,19 +79,32 @@ func _on_ask_player_for_target(source_unit: Unit, ability_index: String, show_in
 			source_unit.add_child(target_indicator)
 	
 	if ability.data.target_mode == AbilityData.TargetMode.UNIT:
-		var signals = SignalCombiner.new([floor_clicked, unit_clicked, cancel])
+		var signals = SignalCombiner.new([floor_clicked, cancel])
 		var result = await signals.completed_any
-		if result["source"] == unit_clicked:
-			if ability.data.is_valid_target(source_unit, result["data"]):
-				target = result["data"].get_path()
+		if result["source"] == floor_clicked:
+			var detection_area: Area3D = load("res://core/game/range_area.tscn").instantiate()
+			detection_area.position = result["data"]
+			add_child(detection_area)
+			detection_area.get_node(^"CollisionShape3D").shape.radius = UNIT_SELECTION_RANGE
+			await get_tree().physics_frame
+			
+			var targeted_unit: Unit = detection_area.get_overlapping_bodies().filter(
+					func(unit: Unit) -> bool: return ability.data.is_valid_target(source_unit, unit)
+			).reduce(
+					func(prev_closest_unit: Unit, curr_unit: Unit) -> Unit:
+						var is_closer:= curr_unit.global_position.distance_to(global_position) < \
+								prev_closest_unit.global_position.distance_to(global_position)
+						return curr_unit if is_closer else prev_closest_unit)
+			
+			if targeted_unit:
+				target = targeted_unit.get_path()
+			detection_area.queue_free()
 	else:
-		var signals = SignalCombiner.new([floor_clicked, unit_clicked, cancel])
+		var signals = SignalCombiner.new([floor_clicked, cancel])
 		var result = await signals.completed_any
 		match result["source"]:
 			floor_clicked:
 				target = result["data"]
-			unit_clicked:
-				target = result["data"].global_position
 	
 	if range_indicator:
 		range_indicator.queue_free()
@@ -105,7 +116,7 @@ func _on_ask_player_for_target(source_unit: Unit, ability_index: String, show_in
 		source_unit.activate_ability.rpc_id(1, ability_index, target)
 
 
-func _on_floor_input(_camera: Node, event: InputEvent, event_position: Vector3,_normal: Vector3,
+func _on_floor_input(_camera: Node, event: InputEvent, event_position: Vector3, _normal: Vector3,
 			_shape_idx: int):
 	
 	if event is InputEventMouseMotion:
@@ -119,16 +130,6 @@ func _on_floor_input(_camera: Node, event: InputEvent, event_position: Vector3,_
 	
 	if event.is_action_pressed(&"attack_move_temp"):
 		attack_move_unit.rpc_id(1, event_position)
-
-
-func _on_unit_input(_camera: Node, event: InputEvent, _event_position: Vector3,_normal: Vector3,
-			_shape_idx: int, unit: Unit):
-	
-	if event.is_action_pressed(&"unit_move"):
-		move_unit.rpc_id(1, unit.position)
-	
-	if event.is_action_pressed(&"left_click_temp"):
-		unit_clicked.emit(unit)
 
 
 @rpc("any_peer", "call_local", "reliable")

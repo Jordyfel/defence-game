@@ -5,6 +5,8 @@ extends Node3D
 signal floor_clicked(click_position: Vector3)
 signal cancel
 
+@export var test_unit_temp: PackedScene
+
 const UNIT_SELECTION_RANGE = 1.0
 
 var targeting:= false
@@ -31,7 +33,7 @@ func _unhandled_input(event: InputEvent) -> void:
 # Called only on the server.
 func start_game() -> void:
 	for i in 1:
-		var new_unit: Unit = load("res://design/units/kitty.tscn").instantiate()
+		var new_unit: Unit = test_unit_temp.instantiate()
 		new_unit.team = &"player"
 		new_unit.position = $UnitSpawn.position
 		new_unit.ask_player_for_target.connect(_on_ask_player_for_target)
@@ -48,6 +50,12 @@ func spawn_enemy(scene_path: String) -> void:
 	add_child(new_unit, true)
 	await get_tree().physics_frame
 	new_unit.command_attack_move($EnemyDestination.position)
+
+
+func _to_closest_unit(prev_closest_unit: Unit, curr_unit: Unit, area: Area3D) -> Unit:
+	var is_closer:= curr_unit.global_position.distance_to(area.global_position) < \
+			prev_closest_unit.global_position.distance_to(area.global_position)
+	return curr_unit if is_closer else prev_closest_unit
 
 
 func _on_ask_player_for_target(source_unit: Unit, ability_index: String, show_indicators: bool) -> void:
@@ -88,13 +96,9 @@ func _on_ask_player_for_target(source_unit: Unit, ability_index: String, show_in
 			detection_area.get_node(^"CollisionShape3D").shape.radius = UNIT_SELECTION_RANGE
 			await get_tree().physics_frame
 			
-			var targeted_unit: Unit = detection_area.get_overlapping_bodies().filter(
-					func(unit: Unit) -> bool: return ability.data.is_valid_target(source_unit, unit)
-			).reduce(
-					func(prev_closest_unit: Unit, curr_unit: Unit) -> Unit:
-						var is_closer:= curr_unit.global_position.distance_to(global_position) < \
-								prev_closest_unit.global_position.distance_to(global_position)
-						return curr_unit if is_closer else prev_closest_unit)
+			var targeted_unit: Unit = detection_area.get_overlapping_bodies(
+				).filter(func(unit: Unit) -> bool: return ability.data.is_valid_target(source_unit, unit)
+				).reduce(_to_closest_unit.bind(detection_area))
 			
 			if targeted_unit:
 				target = targeted_unit.get_path()

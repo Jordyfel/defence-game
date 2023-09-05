@@ -1,9 +1,7 @@
 class_name Unit
 extends CharacterBody3D
 
-# TODO:
 
-# Make the unit selection area slide while targeting and add target indicator on the unit.
 
 signal ask_player_for_target(unit: Unit, ability: UnitAbility)
 signal ability_cooldown_started(ability_key: String, cooldown_duration: float)
@@ -71,6 +69,12 @@ func command_move(target_position: Vector3) -> void:
 	_move.rpc(target_position)
 
 
+func _to_closest_unit(prev_closest_unit: Unit, curr_unit: Unit) -> Unit:
+	var is_closer:= curr_unit.global_position.distance_to(global_position) < \
+			prev_closest_unit.global_position.distance_to(global_position)
+	return curr_unit if is_closer else prev_closest_unit
+
+
 @rpc("any_peer", "call_local", "reliable")
 func command_attack_move(target_position: Vector3) -> void:
 	assert(aggro_range > ability_a.get_autocast_max_range(), "Case not handled in attack move.")
@@ -88,15 +92,11 @@ func command_attack_move(target_position: Vector3) -> void:
 	await get_tree().physics_frame
 	
 	while true:
-		var units_in_range: Array[Node3D] = detection_area.get_overlapping_bodies().filter(
-				func(unit: Unit) -> bool: return ability_a.data.is_valid_target(self, unit))
+		var units_in_range: Array[Node3D] = detection_area.get_overlapping_bodies(
+		).filter(func(unit: Unit) -> bool: return ability_a.data.is_valid_target(self, unit))
 		var targeted_unit: Unit
 		if not units_in_range.is_empty():
-			targeted_unit = units_in_range.reduce(
-					func(prev_closest_unit: Unit, curr_unit: Unit) -> Unit:
-						var is_closer:= curr_unit.global_position.distance_to(global_position) < \
-								prev_closest_unit.global_position.distance_to(global_position)
-						return curr_unit if is_closer else prev_closest_unit)
+			targeted_unit = units_in_range.reduce(_to_closest_unit)
 		else:
 			_move.rpc(target_position)
 			while true:

@@ -9,17 +9,21 @@ func _ready() -> void:
 
 
 func _on_join_button_pressed() -> void:
-	Lobby.player_info["name"] = %NameEdit.text
+	if not %NameEdit.text.is_empty():
+		Lobby.player_info["name"] = %NameEdit.text
 	Lobby.join_game()
+	%JoinButton.disabled = true
 	%CreateButton.disabled = true
-	%ExitLobbyButton.show()
+	%QuitButton.show()
 	%PlayerNamesList.show()
 
 
 func _on_create_game_button_pressed() -> void:
-	Lobby.player_info["name"] = %NameEdit.text
+	if not %NameEdit.text.is_empty():
+		Lobby.player_info["name"] = %NameEdit.text
 	Lobby.create_game()
 	%JoinButton.disabled = true
+	%CreateButton.disabled = true
 	%StartButton.show()
 	%QuitButton.show()
 	%PlayerNamesList.show()
@@ -31,16 +35,18 @@ func _on_player_connected(peer_id: int, player_info: Dictionary) -> void:
 
 
 func _on_player_disconnected(peer_id: int) -> void:
-	for child in %PlayerNamesList.get_children():
-		if child is PlayerElement:
-			if child.player_id == peer_id:
-				child.queue_free()
+	%PlayerNamesList.get_children(
+		).filter(func(node: Node) -> bool: return node is PlayerElement
+		).filter(func(element: PlayerElement) -> bool: return element.player_id == peer_id
+		)[0].queue_free()
 
 
 func _on_server_disconnected() -> void:
 	clear_player_list()
 	%PlayerNamesList.hide()
-	%ExitLobbyButton.hide()
+	%QuitButton.hide()
+	%JoinButton.disabled = false
+	%CreateButton.disabled = false
 
 
 func add_name_to_menu(p_id, p_name) -> void:
@@ -57,22 +63,18 @@ func _on_start_button_pressed() -> void:
 func _on_quit_button_pressed() -> void:
 	Lobby.remove_multiplayer_peer()
 	clear_player_list()
-	%StartButton.hide()
 	%QuitButton.hide()
 	%PlayerNamesList.hide()
+	%JoinButton.disabled = false
+	%CreateButton.disabled = false
+	if %StartButton.visible:
+		%StartButton.hide()
 
 
 func clear_player_list() -> void:
 	for child in %PlayerNamesList.get_children():
 		if child is PlayerElement:
 				child.queue_free()
-
-
-func _on_exit_lobby_button_pressed() -> void:
-	Lobby.remove_multiplayer_peer()
-	clear_player_list()
-	%PlayerNamesList.hide()
-	%ExitLobbyButton.hide()
 
 
 

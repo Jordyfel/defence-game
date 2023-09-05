@@ -94,13 +94,6 @@ custom_minimum_size = Vector2(180, 42)
 layout_mode = 2
 text = "Start Game"
 
-[node name="ExitLobbyButton" type="Button" parent="VBoxContainer/VBoxContainer/LobbyButtons"]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(180, 42)
-layout_mode = 2
-text = "Exit Lobby"
-
 [node name="Spacer" type="Control" parent="VBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
@@ -109,4 +102,3 @@ layout_mode = 2
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/JoinButton" to="." method="_on_join_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/LobbyButtons/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer/LobbyButtons/StartButton" to="." method="_on_start_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/VBoxContainer/LobbyButtons/ExitLobbyButton" to="." method="_on_exit_lobby_button_pressed"]

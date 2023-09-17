@@ -44,6 +44,9 @@ var health: float:
 @onready var animation_player:= $AnimationPlayer
 @onready var cast_lock_timer:= $CastAnimationLockTimer
 
+# In radians per second.
+var _turn_speed:= 20
+
 # For faster iteration.
 var _valid_abilities: Array[UnitAbility] = []
 
@@ -128,7 +131,6 @@ func command_attack_move(target_position: Vector3) -> void:
 
 @rpc("call_local", "reliable")
 func _move(target_position: Vector3) -> void:
-	look_at(target_position + Vector3(0, position.y, 0), Vector3.UP, true)
 	navigation_agent.set_target_position(target_position)
 	animation_player.play(&"run")
 
@@ -174,8 +176,20 @@ func _physics_process(delta: float) -> void:
 
 
 func _on_velocity_computed(safe_velocity: Vector3) -> void:
+	_turn(safe_velocity.normalized())
 	velocity = safe_velocity
 	move_and_slide()
+
+
+# Should be called every physics frame when turning
+func _turn(target_direction_normal: Vector3):
+	var target_basis:= Basis.looking_at(target_direction_normal, Vector3.UP, true)
+	var angle_to_rotate:= global_transform.basis.get_rotation_quaternion().angle_to(
+			target_basis.get_rotation_quaternion())
+	var interpolation_weight:= _turn_speed * get_physics_process_delta_time() / angle_to_rotate
+	interpolation_weight = clampf(interpolation_weight, 0.0, 1.0)
+	global_transform.basis = global_transform.basis.slerp(target_basis, interpolation_weight)
+	global_transform = global_transform.orthonormalized()
 
 
 func _on_navigation_agent_3d_navigation_finished() -> void:
@@ -261,13 +275,6 @@ func _start_casting_ability(ability_index: String, stop_moving: bool,
 		look_at_target: bool, target) -> void:
 	
 	var animation_name = "ability_" + ability_index
-	if stop_moving:
-		navigation_agent.set_target_position(global_position)
-		cast_lock_timer.start(animation_player.get_animation(animation_name).length)
-		if look_at_target:
-			assert(target != null)
-			var target_position = target if target is Vector3 else get_node(target).global_position
-			look_at(target_position, Vector3.UP, true)
 	
 	var ability = abilities[ability_index]
 	ability_cooldown_started.emit(abilities.find_key(ability), ability.base_cooldown)
@@ -276,6 +283,17 @@ func _start_casting_ability(ability_index: String, stop_moving: bool,
 	
 	assert(animation_player.has_animation(animation_name))
 	animation_player.play(animation_name)
+	
+	if stop_moving:
+		navigation_agent.set_target_position(global_position)
+		cast_lock_timer.start(animation_player.get_animation(animation_name).length)
+		if look_at_target:
+			assert(target != null)
+			var target_position = target if target is Vector3 else get_node(target).global_position
+			var target_transform = global_transform.looking_at(target_position, Vector3.UP, true)
+			while not global_transform.is_equal_approx(target_transform):
+				_turn(position.direction_to(target_position))
+				await get_tree().physics_frame
 
 
 func _move_in_range_of_position(target_position: Vector3, distance: float) -> bool:

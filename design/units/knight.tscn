@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://d31n7w2r1dcwj"]
+[gd_scene load_steps=25 format=3 uid="uid://d31n7w2r1dcwj"]
 
 [ext_resource type="PackedScene" uid="uid://db7ry8dwek5ww" path="res://core/unit/unit.tscn" id="1_mmvrh"]
 [ext_resource type="Texture2D" uid="uid://lat7ahrw014r" path="res://assets/icon.svg" id="2_76icp"]
@@ -72,10 +72,6 @@ data = SubResource("Resource_uy0gr")
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4vggr"]
 radius = 0.7
 height = 2.5
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_1qpid"]
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_g3mfh"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_dpfa2"]
 viewport_path = NodePath("HealthBar/SubViewport")
@@ -275,7 +271,7 @@ bone_idx = 22
 transform = Transform3D(0.996275, -5.14962e-09, 0.0862352, 5.13044e-09, 1, 4.44078e-10, -0.0862352, 9.50261e-16, 0.996275, -1.63022e-08, 1.20229, -1.40136e-07)
 bone_idx = 23
 
-[node name="HealthBar" parent="." index="4"]
+[node name="HealthBar" parent="." index="2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.88555, 0)
 texture = SubResource("ViewportTexture_dpfa2")
 

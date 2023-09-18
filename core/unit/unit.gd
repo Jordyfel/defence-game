@@ -273,10 +273,8 @@ func activate_ability(ability_index: String, target: Variant) -> void:
 @rpc("call_local", "reliable")
 func _start_casting_ability(ability_index: String, stop_moving: bool,
 		look_at_target: bool, target) -> void:
-	
-	var animation_name = "ability_" + ability_index
-	
-	var ability = abilities[ability_index]
+	var animation_name: StringName = "ability_" + ability_index
+	var ability: UnitAbility = abilities[ability_index]
 	ability_cooldown_started.emit(abilities.find_key(ability), ability.base_cooldown)
 	ability.cooldown_remaining = ability.base_cooldown
 	ability.is_on_cooldown = true
@@ -286,7 +284,7 @@ func _start_casting_ability(ability_index: String, stop_moving: bool,
 	
 	if stop_moving:
 		navigation_agent.set_target_position(global_position)
-		cast_lock_timer.start(animation_player.get_animation(animation_name).length)
+		cast_lock_timer.start(ability.cast_time + ability.animation_lock_after_cast)
 		if look_at_target:
 			assert(target != null)
 			var target_position = target if target is Vector3 else get_node(target).global_position

@@ -21,6 +21,7 @@ base_cooldown = 3.0
 resource_cost = 0.0
 cast_range = 10
 cast_time = 0.2
+animation_lock_after_cast = 0.0
 is_castable_while_moving = true
 data = ExtResource("3_pf3e8")
 ability_scene = ExtResource("2_yob13")
@@ -32,6 +33,7 @@ base_cooldown = 3.0
 resource_cost = 0.0
 cast_range = 10
 cast_time = 0.2
+animation_lock_after_cast = 0.0
 is_castable_while_moving = false
 data = ExtResource("6_e8r0k")
 ability_scene = ExtResource("5_fbdw6")
@@ -43,6 +45,7 @@ base_cooldown = 3.0
 resource_cost = 0.0
 cast_range = 10
 cast_time = 0.2
+animation_lock_after_cast = 0.0
 is_castable_while_moving = false
 data = ExtResource("8_axlml")
 ability_scene = ExtResource("7_ebj46")
@@ -54,6 +57,7 @@ base_cooldown = 1.5
 resource_cost = 0.0
 cast_range = 10
 cast_time = 0.2
+animation_lock_after_cast = 0.0
 is_castable_while_moving = false
 data = ExtResource("6_e2paw")
 ability_scene = ExtResource("5_vbg2e")
@@ -79,6 +83,7 @@ base_cooldown = 0.0
 resource_cost = 0.0
 cast_range = 0
 cast_time = 0.0
+animation_lock_after_cast = 0.0
 is_castable_while_moving = false
 data = SubResource("Resource_uy0gr")
 
@@ -205,6 +210,8 @@ _data = {
 [node name="Kitty" instance=ExtResource("1_pyx1o")]
 unit_name = "Kitty"
 team = &"enemy"
+movement_speed = 2.0
+max_health = 40.0
 ability_q = SubResource("Resource_j1j3g")
 ability_w = SubResource("Resource_8iu0i")
 ability_e = SubResource("Resource_h2hsc")
@@ -225,10 +232,6 @@ shape = SubResource("SphereShape3D_klkv0")
 
 [node name="HealthBar" parent="." index="2"]
 texture = SubResource("ViewportTexture_0vr84")
-
-[node name="NavigationAgent3D" parent="." index="3"]
-height = 0.5
-radius = 0.4
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="5"]
 libraries = {

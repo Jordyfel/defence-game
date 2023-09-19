@@ -27,6 +27,7 @@ base_cooldown = 0.0
 resource_cost = 0.0
 cast_range = 0
 cast_time = 0.0
+animation_lock_after_cast = 0.0
 is_castable_while_moving = false
 data = SubResource("Resource_uy0gr")
 

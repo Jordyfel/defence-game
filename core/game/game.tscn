@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://c6gj02my76wo6"]
+[gd_scene load_steps=17 format=3 uid="uid://c6gj02my76wo6"]
 
 [ext_resource type="Script" path="res://core/game/game.gd" id="1_bl3g5"]
 [ext_resource type="Script" path="res://core/game/camera.gd" id="2_fap4q"]
@@ -9,10 +9,7 @@
 [ext_resource type="Script" path="res://core/game/hud/bottom_bar.gd" id="5_yvbdk"]
 [ext_resource type="Script" path="res://core/game/hud/perf_metrics.gd" id="6_btr40"]
 [ext_resource type="PackedScene" uid="uid://worcrepyo25l" path="res://core/game/hud/ability_button.tscn" id="6_e7hu2"]
-[ext_resource type="PackedScene" uid="uid://bmgabk4do4bx8" path="res://design/units/barbarian.tscn" id="9_abf5k"]
-[ext_resource type="Texture2D" uid="uid://lat7ahrw014r" path="res://assets/icon.svg" id="10_mdwpv"]
-[ext_resource type="Script" path="res://core/ability/ability_data.gd" id="11_1v6pn"]
-[ext_resource type="Script" path="res://core/ability/unit_ability.gd" id="11_v0lcq"]
+[ext_resource type="Script" path="res://core/game/enemy_spawner.gd" id="10_dfsd4"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7hjkv"]
 
@@ -31,31 +28,6 @@ material = SubResource("StandardMaterial3D_thy3b")
 size = Vector2(40, 40)
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ilkvm"]
-
-[sub_resource type="Resource" id="Resource_8eqbb"]
-script = ExtResource("11_1v6pn")
-name = "Stop"
-icon = ExtResource("10_mdwpv")
-target_mode = 0
-circle_radius = 0.0
-arc_range = 0.0
-arc_width = 0.0
-line_width = 0.0
-is_projectile = false
-projectile_speed = 0.0
-max_travel_distance = 0.0
-piercing = false
-
-[sub_resource type="Resource" id="Resource_t2mwo"]
-resource_local_to_scene = true
-script = ExtResource("11_v0lcq")
-base_cooldown = 0.0
-resource_cost = 0.0
-cast_range = 0
-cast_time = 0.0
-animation_lock_after_cast = 0.0
-is_castable_while_moving = false
-data = SubResource("Resource_8eqbb")
 
 [node name="Game" type="Node3D"]
 script = ExtResource("1_bl3g5")
@@ -229,19 +201,17 @@ layout_mode = 2
 [node name="HotkeyLabel" parent="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonV/HBoxContainer" index="1"]
 text = "V"
 
-[node name="UnitSpawn" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.0102, 0, -7.196)
+[node name="PlayerSpawnPosition" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0242081, 0, 9.003)
 
-[node name="EnemySpawn" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15.9988)
+[node name="EnemySpawner" type="Node" parent="."]
+script = ExtResource("10_dfsd4")
 
-[node name="EnemyDestination" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.00495)
+[node name="EnemySpawnPosition" type="Marker3D" parent="EnemySpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -12.7244)
 
-[node name="Barbarian" parent="." instance=ExtResource("9_abf5k")]
-transform = Transform3D(0.703891, 0, 0.710308, 0, 1, 0, -0.710308, 0, 0.703891, 6.76469, 0, -5.93283)
-team = &"enemy"
-ability_s = SubResource("Resource_t2mwo")
+[node name="EnemyDestination" type="Marker3D" parent="EnemySpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 11.5495)
 
 [editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonQ"]
 [editable path="CanvasLayerHUD/HUD/BottomBar/MarginContainer/AbilityGrid/AbilityButtonW"]

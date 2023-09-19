@@ -12,15 +12,10 @@ const UNIT_SELECTION_RANGE = 1.0
 var targeting:= false
 var mouse_position_on_floor: Vector3
 
-var enemy_controller: EnemyController
-
 
 
 func _ready() -> void:
 	$Floor.input_event.connect(_on_floor_input)
-	
-	if multiplayer.is_server():
-		enemy_controller = EnemyController.new()
 	
 	Lobby.player_loaded.rpc_id(1)
 
@@ -32,24 +27,12 @@ func _unhandled_input(event: InputEvent) -> void:
 
 # Called only on the server.
 func start_game() -> void:
-	for i in 1:
-		var new_unit: Unit = test_unit_temp.instantiate()
-		new_unit.team = &"player"
-		new_unit.position = $UnitSpawn.position
-		new_unit.ask_player_for_target.connect(_on_ask_player_for_target)
-		add_child(new_unit, true)
-		%BottomBar.connect_to_unit(new_unit)
-	
-	spawn_enemy("res://design/units/kitty.tscn")
-
-
-#probably temp
-func spawn_enemy(scene_path: String) -> void:
-	var new_unit: Unit = load(scene_path).instantiate()
-	new_unit.position = $EnemySpawn.position
+	var new_unit: Unit = test_unit_temp.instantiate()
+	new_unit.team = &"player"
+	new_unit.position = $PlayerSpawnPosition.position
+	new_unit.ask_player_for_target.connect(_on_ask_player_for_target)
 	add_child(new_unit, true)
-	await get_tree().physics_frame
-	new_unit.command_attack_move($EnemyDestination.position)
+	%BottomBar.connect_to_unit(new_unit)
 
 
 func _to_closest_unit(prev_closest_unit: Unit, curr_unit: Unit, area: Area3D) -> Unit:
@@ -136,6 +119,7 @@ func _on_floor_input(_camera: Node, event: InputEvent, event_position: Vector3, 
 		attack_move_unit.rpc_id(1, event_position)
 
 
+# FIXME
 @rpc("any_peer", "call_local", "reliable")
 func move_unit(target_position: Vector3) -> void:
 	for unit in get_children().filter(func(node): return node is Unit):
@@ -143,6 +127,7 @@ func move_unit(target_position: Vector3) -> void:
 			unit.command_move.rpc_id(1, target_position)
 
 
+# FIXME
 @rpc("any_peer", "call_local", "reliable")
 func attack_move_unit(target_position: Vector3) -> void:
 	for unit in get_children().filter(func(node): return node is Unit):

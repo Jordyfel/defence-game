@@ -103,7 +103,9 @@ func command_attack_move(target_position: Vector3) -> void:
 		else:
 			_move.rpc(target_position)
 			while true:
+				@warning_ignore("confusable_local_declaration")
 				var signals = SignalCombiner.new([detection_area.body_entered, queue_command])
+				@warning_ignore("confusable_local_declaration")
 				var result = await signals.completed
 				if result["source"] == queue_command:
 					return

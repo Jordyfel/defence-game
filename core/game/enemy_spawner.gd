@@ -4,7 +4,7 @@ extends Node
 
 
 func _ready() -> void:
-	for i in 1:
+	for i in 10:
 		await get_tree().create_timer(1).timeout
 		spawn_enemy("res://design/units/kitty.tscn")
 

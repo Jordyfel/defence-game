@@ -39,7 +39,7 @@ ability_scene = ExtResource("2_wm0ny")
 [sub_resource type="Resource" id="Resource_qo6vs"]
 resource_local_to_scene = true
 script = ExtResource("4_d377c")
-base_cooldown = 1.0
+base_cooldown = 2.0
 resource_cost = 0.0
 cast_range = 10
 cast_time = 0.4
@@ -274,6 +274,9 @@ bone_idx = 22
 [node name="Knight_Cape" parent="Model/Rig/Skeleton3D" index="8"]
 transform = Transform3D(0.996275, -5.14962e-09, 0.0862353, 5.13043e-09, 1, 4.44077e-10, -0.0862353, 1.88007e-15, 0.996275, -1.63023e-08, 1.20229, -1.40136e-07)
 bone_idx = 23
+
+[node name="AnimationPlayer" parent="Model" index="1"]
+playback_default_blend_time = 0.2
 
 [node name="HealthBar" parent="." index="2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.88555, 0)

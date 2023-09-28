@@ -211,7 +211,7 @@ _data = {
 unit_name = "Kitty"
 team = &"enemy"
 movement_speed = 2.0
-max_health = 40.0
+max_health = 60.0
 ability_q = SubResource("Resource_j1j3g")
 ability_w = SubResource("Resource_8iu0i")
 ability_e = SubResource("Resource_h2hsc")
@@ -225,6 +225,9 @@ bones/5/rotation = Quaternion(0.00806412, -0.0124769, 0.682071, 0.731135)
 bones/7/rotation = Quaternion(0.682068, -0.731138, 0.00803397, 0.0125091)
 bones/9/rotation = Quaternion(0.0199471, -0.00173057, 0.662293, 0.748978)
 bones/11/rotation = Quaternion(0.662269, -0.748981, 0.0206426, 0.000943979)
+
+[node name="AnimationPlayer" parent="Model" index="1"]
+playback_default_blend_time = 0.2
 
 [node name="CollisionShape3D" parent="." index="1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)

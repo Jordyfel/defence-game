@@ -103,9 +103,7 @@ func command_attack_move(target_position: Vector3) -> void:
 		else:
 			_move.rpc(target_position)
 			while true:
-				@warning_ignore("confusable_local_declaration")
 				var signals = SignalCombiner.new([detection_area.body_entered, queue_command])
-				@warning_ignore("confusable_local_declaration")
 				var result = await signals.completed
 				if result["source"] == queue_command:
 					return
@@ -115,19 +113,15 @@ func command_attack_move(target_position: Vector3) -> void:
 						break
 		
 		var desired_distance = ability_a.get_autocast_max_range()
-		var is_target_reached = await _move_in_range_of_unit(targeted_unit, desired_distance)
+		
+		var is_target_reached = await _move_in_range_of_unit(targeted_unit, desired_distance, func(): return not ability_a.is_on_cooldown)
 		if not is_target_reached:
 			return
 		
-		while ability_a.is_on_cooldown:
-			is_target_reached = await _move_in_range_of_unit(targeted_unit, desired_distance)
-			if not is_target_reached:
-				return
-		
 		activate_ability("a", targeted_unit.get_path())
-		var signals = SignalCombiner.new([cast_lock_timer.timeout, queue_command])
-		var result = await signals.completed
-		if result["source"] == queue_command:
+		var sig = SignalCombiner.new([cast_lock_timer.timeout, queue_command])
+		var res = await sig.completed
+		if res["source"] == queue_command:
 			return
 
 
@@ -159,8 +153,6 @@ func _process_cooldowns(delta: float) -> void:
 	for ability in _valid_abilities:
 		if ability.is_on_cooldown:
 			ability.cooldown_remaining -= delta
-			if ability.cooldown_remaining < 0:
-				ability.is_on_cooldown = false
 
 
 func _physics_process(delta: float) -> void:
@@ -178,7 +170,10 @@ func _physics_process(delta: float) -> void:
 
 
 func _on_velocity_computed(safe_velocity: Vector3) -> void:
-	_turn(safe_velocity.normalized())
+	if safe_velocity == Vector3.ZERO:
+		return
+	if not abs(Vector3.UP.dot(safe_velocity.normalized())) == 1:
+		_turn(safe_velocity.normalized())
 	velocity = safe_velocity
 	move_and_slide()
 
@@ -279,7 +274,6 @@ func _start_casting_ability(ability_index: String, stop_moving: bool,
 	var ability: UnitAbility = abilities[ability_index]
 	ability_cooldown_started.emit(abilities.find_key(ability), ability.base_cooldown)
 	ability.cooldown_remaining = ability.base_cooldown
-	ability.is_on_cooldown = true
 	
 	assert(animation_player.has_animation(animation_name))
 	animation_player.play(animation_name)
@@ -307,32 +301,39 @@ func _move_in_range_of_position(target_position: Vector3, distance: float) -> bo
 	return true
 
 
-func _move_in_range_of_unit(target_unit: Unit, distance: float) -> bool:
+func _move_in_range_of_unit(target_unit: Unit, distance: float,
+			condition: Callable = func(): return true) -> bool:
+	
+	const FOLLOW_TOLERANCE = 0.2
 	var range_area: Area3D = load("res://core/game/range_area.tscn").instantiate()
 	add_child(range_area)
 	range_area.get_node(^"CollisionShape3D").shape.radius = distance
-	var sig = SignalCombiner.new([get_tree().physics_frame, queue_command])
-	var res = await sig.completed
-	if res["source"] == queue_command:
-		return false
 	
-	if range_area.get_overlapping_bodies().has(target_unit):
-		return true
+	var last_target_position: Vector3 = target_unit.global_position
+	var target_in_area:= false
+	var signals:= SignalCombiner.new([
+			range_area.body_entered,
+			range_area.body_exited,
+			get_tree().physics_frame,
+			queue_command,
+			])
 	
-	var last_unit_to_enter_range: Unit
-	_move.rpc(target_unit.global_position)
-	var last_target_position:= target_unit.global_position
-	
-	var signals = SignalCombiner.new([range_area.body_entered, get_tree().physics_frame, queue_command])
-	while last_unit_to_enter_range != target_unit:
-		if not target_unit.global_position.is_equal_approx(last_target_position):
-			_move.rpc(target_unit.global_position)
+	while not (target_in_area and condition.call()):
 		var result = await signals.completed
+		if result["source"] == get_tree().physics_frame:
+			if target_unit.global_position.distance_to(last_target_position) > FOLLOW_TOLERANCE:
+				_move.rpc(target_unit.global_position)
+				last_target_position = target_unit.global_position
 		if result["source"] == queue_command:
 			range_area.queue_free()
 			return false
 		elif result["source"] == range_area.body_entered:
-			last_unit_to_enter_range = result["data"]
+			if result["data"] == target_unit:
+				target_in_area = true
+				_stop.rpc()
+		elif result["source"] == range_area.body_exited:
+			if result["data"] == target_unit:
+				target_in_area = false
 	
 	range_area.queue_free()
 	return true

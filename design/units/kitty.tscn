@@ -50,10 +50,10 @@ is_castable_while_moving = false
 data = ExtResource("8_axlml")
 ability_scene = ExtResource("7_ebj46")
 
-[sub_resource type="Resource" id="Resource_i1yar"]
+[sub_resource type="Resource" id="Resource_ur6sb"]
 resource_local_to_scene = true
 script = ExtResource("3_gagjd")
-base_cooldown = 1.5
+base_cooldown = 2.0
 resource_cost = 0.0
 cast_range = 10
 cast_time = 0.2
@@ -212,10 +212,11 @@ unit_name = "Kitty"
 team = &"enemy"
 movement_speed = 2.0
 max_health = 60.0
+aggro_range = 12.0
 ability_q = SubResource("Resource_j1j3g")
 ability_w = SubResource("Resource_8iu0i")
 ability_e = SubResource("Resource_h2hsc")
-ability_a = SubResource("Resource_i1yar")
+ability_a = SubResource("Resource_ur6sb")
 ability_s = SubResource("Resource_sbb5e")
 
 [node name="Model" parent="." index="0" instance=ExtResource("2_xewvb")]

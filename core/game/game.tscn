@@ -202,7 +202,7 @@ layout_mode = 2
 text = "V"
 
 [node name="PlayerSpawnPosition" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0242081, 0, 9.003)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0242081, 0, 4.78896)
 
 [node name="EnemySpawner" type="Node" parent="."]
 script = ExtResource("10_dfsd4")

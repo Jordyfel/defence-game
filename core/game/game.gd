@@ -27,12 +27,21 @@ func _unhandled_input(event: InputEvent) -> void:
 
 # Called only on the server.
 func start_game() -> void:
-	var new_unit: Unit = test_unit_temp.instantiate()
-	new_unit.team = &"player"
-	new_unit.position = $PlayerSpawnPosition.position
-	new_unit.ask_player_for_target.connect(_on_ask_player_for_target)
-	add_child(new_unit, true)
-	%BottomBar.connect_to_unit(new_unit)
+	var i = 0
+	for player_id in Lobby.players:
+		var new_unit: Unit = test_unit_temp.instantiate()
+		new_unit.position = $PlayerSpawnPosition.position + Vector3(i * 2, 0, 0)
+		add_child(new_unit, true)
+		setup_unit.rpc_id(player_id, new_unit.get_path())
+		i += 1
+
+
+@rpc("call_local", "reliable")
+func setup_unit(unit_path: NodePath):
+	var unit = get_node(unit_path)
+	unit.team = &"player"
+	unit.ask_player_for_target.connect(_on_ask_player_for_target)
+	%BottomBar.connect_to_unit(unit)
 
 
 func _to_closest_unit(prev_closest_unit: Unit, curr_unit: Unit, area: Area3D) -> Unit:
@@ -110,26 +119,20 @@ func _on_floor_input(_camera: Node, event: InputEvent, event_position: Vector3, 
 		mouse_position_on_floor = event_position
 	
 	if event.is_action_pressed(&"unit_move"):
-		move_unit.rpc_id(1, event_position)
+		move_unit.rpc_id(1, event_position, %BottomBar.connected_unit.get_path())
 	
 	if event.is_action_pressed(&"left_click_temp"):
 		floor_clicked.emit(event_position)
 	
 	if event.is_action_pressed(&"attack_move_temp"):
-		attack_move_unit.rpc_id(1, event_position)
+		attack_move_unit.rpc_id(1, event_position, %BottomBar.connected_unit.get_path())
 
 
-# FIXME
 @rpc("any_peer", "call_local", "reliable")
-func move_unit(target_position: Vector3) -> void:
-	for unit in get_children().filter(func(node): return node is Unit):
-		if unit.team == &"player":
-			unit.command_move.rpc_id(1, target_position)
+func move_unit(target_position: Vector3, unit_path: NodePath) -> void:
+	get_node(unit_path).command_move.rpc_id(1, target_position)
 
 
-# FIXME
 @rpc("any_peer", "call_local", "reliable")
-func attack_move_unit(target_position: Vector3) -> void:
-	for unit in get_children().filter(func(node): return node is Unit):
-		if unit.team == &"player":
-			unit.command_attack_move.rpc_id(1, target_position)
+func attack_move_unit(target_position: Vector3, unit_path: NodePath) -> void:
+	get_node(unit_path).command_attack_move.rpc_id(1, target_position)

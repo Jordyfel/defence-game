@@ -4,8 +4,11 @@ extends Node
 
 
 func _ready() -> void:
-	for i in 10:
-		await get_tree().create_timer(1).timeout
+	if not multiplayer.is_server():
+		return
+	
+	for i in 1:
+		await get_tree().create_timer(0.2).timeout
 		spawn_enemy("res://design/units/kitty.tscn")
 
 

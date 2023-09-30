@@ -12,15 +12,11 @@ extends Resource
 @export var data: AbilityData
 @export var ability_scene: PackedScene
 
-var cooldown_remaining: float:
-	set(value):
-		cooldown_remaining = value
-		if value < 0:
-			is_on_cooldown = false
-		else:
-			is_on_cooldown = true
+var cooldown_remaining: float
 
-var is_on_cooldown:= false
+var is_on_cooldown: bool:
+	get:
+		return cooldown_remaining > 0
 
 
 

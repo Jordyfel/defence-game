@@ -114,7 +114,8 @@ func command_attack_move(target_position: Vector3) -> void:
 		
 		var desired_distance = ability_a.get_autocast_max_range()
 		
-		var is_target_reached = await _move_in_range_of_unit(targeted_unit, desired_distance, func(): return not ability_a.is_on_cooldown)
+		var is_target_reached = await _move_in_range_of_unit(targeted_unit, desired_distance,
+				func(): return not ability_a.is_on_cooldown)
 		if not is_target_reached:
 			return
 		
@@ -304,7 +305,7 @@ func _move_in_range_of_position(target_position: Vector3, distance: float) -> bo
 func _move_in_range_of_unit(target_unit: Unit, distance: float,
 			condition: Callable = func(): return true) -> bool:
 	
-	const FOLLOW_TOLERANCE = 0.2
+	const FOLLOW_TOLERANCE = 0.1
 	var range_area: Area3D = load("res://core/game/range_area.tscn").instantiate()
 	add_child(range_area)
 	range_area.get_node(^"CollisionShape3D").shape.radius = distance
@@ -322,8 +323,9 @@ func _move_in_range_of_unit(target_unit: Unit, distance: float,
 		var result = await signals.completed
 		if result["source"] == get_tree().physics_frame:
 			if target_unit.global_position.distance_to(last_target_position) > FOLLOW_TOLERANCE:
-				_move.rpc(target_unit.global_position)
-				last_target_position = target_unit.global_position
+				if not target_in_area:
+					_move.rpc(target_unit.global_position)
+					last_target_position = target_unit.global_position
 		if result["source"] == queue_command:
 			range_area.queue_free()
 			return false

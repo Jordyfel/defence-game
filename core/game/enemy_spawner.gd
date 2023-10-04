@@ -7,7 +7,7 @@ func _ready() -> void:
 	if not multiplayer.is_server():
 		return
 	
-	for i in 1:
+	for i in 6:
 		await get_tree().create_timer(0.2).timeout
 		spawn_enemy("res://design/units/kitty.tscn")
 

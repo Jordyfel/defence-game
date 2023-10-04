@@ -24,6 +24,13 @@ Lobby="*res://core/lobby.gd"
 window/size/viewport_width=1600
 window/size/viewport_height=900
 
+[file_customization]
+
+folder_colors={
+"res://core/": "gray",
+"res://design/": "purple"
+}
+
 [filesystem]
 
 import/blender/enabled=false

@@ -1,8 +1,7 @@
-[gd_scene load_steps=17 format=3 uid="uid://c6gj02my76wo6"]
+[gd_scene load_steps=16 format=3 uid="uid://c6gj02my76wo6"]
 
 [ext_resource type="Script" path="res://core/game/game.gd" id="1_bl3g5"]
 [ext_resource type="Script" path="res://core/game/camera.gd" id="2_fap4q"]
-[ext_resource type="PackedScene" uid="uid://d31n7w2r1dcwj" path="res://design/units/knight.tscn" id="2_gbwew"]
 [ext_resource type="NavigationMesh" uid="uid://cm3vlaj5hnuw1" path="res://assets/binary_resources/navigation_mesh.res" id="3_28tux"]
 [ext_resource type="Texture2D" uid="uid://bii5o3w5cygfm" path="res://addons/kenney_prototype_textures/dark/texture_07.png" id="4_dbgwi"]
 [ext_resource type="Script" path="res://core/game/spawner.gd" id="5_eclhg"]
@@ -31,7 +30,6 @@ size = Vector2(40, 40)
 
 [node name="Game" type="Node3D"]
 script = ExtResource("1_bl3g5")
-test_unit_temp = ExtResource("2_gbwew")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_ceti6")

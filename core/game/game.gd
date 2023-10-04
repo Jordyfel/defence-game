@@ -5,8 +5,6 @@ extends Node3D
 signal floor_clicked(click_position: Vector3)
 signal cancel
 
-@export var test_unit_temp: PackedScene
-
 const UNIT_SELECTION_RANGE = 1.0
 
 var targeting:= false
@@ -29,7 +27,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func start_game() -> void:
 	var i = 0
 	for player_id in Lobby.players:
-		var new_unit: Unit = test_unit_temp.instantiate()
+		var new_unit: Unit = load(Lobby.players[player_id]["character_path"]).instantiate()
 		new_unit.position = $PlayerSpawnPosition.position + Vector3(i * 2, 0, 0)
 		add_child(new_unit, true)
 		setup_unit.rpc_id(player_id, new_unit.get_path())

@@ -2,10 +2,27 @@ extends Control
 
 
 
+@export var playable_character_paths: Array[String]
+
+@onready var buttons: Array[Button] = [$HBoxContainer/CharacterSelect/Button]
+
+
+
 func _ready() -> void:
 	Lobby.player_connected.connect(_on_player_connected)
 	Lobby.player_disconnected.connect(_on_player_disconnected)
 	Lobby.server_disconnected.connect(_on_server_disconnected)
+	_create_character_select()
+
+
+func _create_character_select() -> void:
+	for i in playable_character_paths.size() - 1:
+		var new_button = $HBoxContainer/CharacterSelect/Button.duplicate(1)
+		$HBoxContainer/CharacterSelect.add_child(new_button, true)
+		buttons.push_back(new_button)
+	for index in playable_character_paths.size():
+		buttons[index].text = playable_character_paths[index].get_file().get_basename().capitalize()
+	Lobby.player_info["character_path"] = playable_character_paths[0]
 
 
 func _on_join_button_pressed() -> void:
@@ -75,6 +92,11 @@ func clear_player_list() -> void:
 	for child in %PlayerNamesList.get_children():
 		if child is PlayerElement:
 				child.queue_free()
+
+
+func _on_character_button_pressed() -> void:
+	var i = buttons.find($HBoxContainer/CharacterSelect/Button.button_group.get_pressed_button())
+	Lobby.player_info["character_path"] = playable_character_paths[i]
 
 
 

@@ -11,6 +11,7 @@
 [ext_resource type="Script" path="res://core/game/enemy_spawner.gd" id="10_dfsd4"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7hjkv"]
+ground_bottom_color = Color(0.180392, 0.121569, 0.0862745, 1)
 
 [sub_resource type="Sky" id="Sky_ptisr"]
 sky_material = SubResource("ProceduralSkyMaterial_7hjkv")
@@ -18,6 +19,7 @@ sky_material = SubResource("ProceduralSkyMaterial_7hjkv")
 [sub_resource type="Environment" id="Environment_ceti6"]
 background_mode = 2
 sky = SubResource("Sky_ptisr")
+glow_enabled = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_thy3b"]
 albedo_texture = ExtResource("4_dbgwi")
